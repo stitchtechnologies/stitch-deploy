@@ -48,8 +48,13 @@ export default function RightView() {
                                 {PLATFORMS_COMING_SOON.map((platform) => (
                                     <TooltipProvider key={platform.id} delayDuration={100}>
                                         <Tooltip>
-                                            <TooltipTrigger className="w-full flex gap-2">
-                                                <TabsTrigger value={platform.id} className="w-full flex gap-2" disabled><Image src={platform.image} alt={platform.displayName} width={14} height={14} />{platform.displayName}</TabsTrigger>
+                                            <TooltipTrigger asChild className="w-full flex gap-2">
+                                                <span tabIndex={0}>
+                                                    <TabsTrigger value={platform.id} className="w-full flex gap-2" disabled>
+                                                        <Image src={platform.image} alt={platform.displayName} width={14} height={14} />
+                                                        {platform.displayName}
+                                                    </TabsTrigger>
+                                                </span>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <p>Coming soon</p>
