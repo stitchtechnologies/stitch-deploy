@@ -1,4 +1,3 @@
-"use client";
 import Head from "next/head"
 import LeftView from "@/components/onboarding/left-view";
 import RightView from "@/components/onboarding/right-view";

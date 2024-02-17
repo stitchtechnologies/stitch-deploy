@@ -12,6 +12,7 @@ export type EnvironmentVariable = {
 export default function EnvironmentVariableItem({ envVar }: { envVar: EnvironmentVariable }) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     const [value, setValue] = useState<string>("")
+
     return (
         <div className="flex gap-4">
             <div className="font-bold font-robotomono flex flex-1 gap-2 items-center"><Code width={14} height={14} /> {envVar.key}</div>

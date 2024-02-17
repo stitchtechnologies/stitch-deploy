@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-// Left view
 export default function LeftView() {
     return (
         <div className="flex flex-col flex-1 items-center justify-center h-screen overscroll-none overflow-hidden">
