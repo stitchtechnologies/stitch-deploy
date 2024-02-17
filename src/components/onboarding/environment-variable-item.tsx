@@ -9,7 +9,7 @@ export type EnvironmentVariable = {
     value: string
 }
 
-export default function EnvironmentVariableItem({ envVar }: { envVar: EnvironmentVariable }) {
+export default function EnvironmentVariableItem({ envVar, disabled }: { envVar: EnvironmentVariable, disabled: boolean }) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     const [value, setValue] = useState<string>("")
 
@@ -23,7 +23,7 @@ export default function EnvironmentVariableItem({ envVar }: { envVar: Environmen
                 <Toggle aria-label="toggle password visability" pressed={isPasswordVisible} onPressedChange={(press) => setIsPasswordVisible(press)} >
                     <Eye width={14} height={14} />
                 </Toggle>
-                <Input type={isPasswordVisible ? "text" : "password"} placeholder={envVar.value} value={value} onChange={(e) => setValue(e.target.value)} />
+                <Input type={isPasswordVisible ? "text" : "password"} placeholder={envVar.value} disabled={disabled} value={value} onChange={(e) => setValue(e.target.value)} />
             </div>
         </div>
     )

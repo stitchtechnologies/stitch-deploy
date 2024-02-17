@@ -21,10 +21,12 @@ const ENVIRONMENT_VARIABLES = [
 
 export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubmitDeploy: (id: string) => void }) {
     const [deploying, setDeploying] = useState(false);
+    const [acceptedCheckbox, setAcceptedCheckbox] = useState(false);
 
     // TODO refactor this
     const handleSubmit = (e: any) => {
         e.preventDefault()
+        if (deploying) return;
         console.log("Deploying", JSON.stringify({
             accessKey: e.target["access-key"].value,
             secret: e.target["secret"].value,
@@ -96,12 +98,12 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
             <div>
                 <h2 className="text-sm">AWS key</h2>
                 <div className="text-sm text-slate-400 mb-3">The key will not be shared with Product and is encrypted before its stored.</div>
-                <Input type="text" name="access-key" placeholder="AKIAIOSFODNN7EXAMPLE" />
+                <Input type="text" name="access-key" placeholder="AKIAIOSFODNN7EXAMPLE" disabled={deploying} />
             </div>
             <div>
                 <h2 className="text-sm">AWS Secret</h2>
                 <div className="text-sm text-slate-400 mb-3">The secret will not be shared with Product and is encrypted before its stored.</div>
-                <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" />
+                <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" disabled={deploying} />
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
             <div>
@@ -109,23 +111,21 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <div className="text-sm text-slate-400 mb-3">Variables below were defined by Product. All variables stay on your environment and are not reported back to Product.</div>
                 <div className="flex flex-col gap-2">
                     {
-                        ENVIRONMENT_VARIABLES.map((envVar: EnvironmentVariable) => <EnvironmentVariableItem key={envVar.key} envVar={envVar} />)
+                        ENVIRONMENT_VARIABLES.map((envVar: EnvironmentVariable) => <EnvironmentVariableItem key={envVar.key} envVar={envVar} disabled={deploying} />)
                     }
                 </div>
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
             <div>
                 <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" />
-                    <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
+                    <Checkbox id="terms" disabled={deploying} checked={acceptedCheckbox} onCheckedChange={(check) => setAcceptedCheckbox(check.valueOf() as boolean)} />
+                    <label htmlFor="terms"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         Deploying the services will start immediately after clicking the button below.
                     </label>
                 </div>
             </div>
-            <Button type={"submit"} disabled={deploying}>{deploying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Deploying services</> : "Deploy services"}</Button>
+            <Button type={"submit"} disabled={!acceptedCheckbox || deploying}>{deploying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Deploying services</> : "Deploy services"}</Button>
         </form >
     )
 }
