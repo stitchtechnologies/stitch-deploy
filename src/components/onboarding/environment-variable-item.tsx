@@ -15,7 +15,10 @@ export default function EnvironmentVariableItem({ envVar }: { envVar: Environmen
 
     return (
         <div className="flex gap-4">
-            <div className="font-bold font-robotomono flex flex-1 gap-2 items-center"><Code width={14} height={14} /> {envVar.key}</div>
+            <div className="font-bold flex flex-1 gap-2 items-center">
+                <Code width={14} height={14} />
+                <span className="font-mono text-sm">{envVar.key}</span>
+            </div>
             <div className="flex gap-2 items-center flex-1 min-w-[70%]">
                 <Toggle aria-label="toggle password visability" pressed={isPasswordVisible} onPressedChange={(press) => setIsPasswordVisible(press)} >
                     <Eye width={14} height={14} />
