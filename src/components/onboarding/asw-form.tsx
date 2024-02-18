@@ -28,7 +28,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
         e.preventDefault()
         if (deploying) return;
         setDeploying(true)
-        fetch("http://localhost:3001/start", {
+        fetch(`//${process.env.NEXT_PUBLIC_SERVER_HOST}/api/deploy/start`, {
             method: "POST",
             headers: new Headers({
                 "Content-Type": "application/json",

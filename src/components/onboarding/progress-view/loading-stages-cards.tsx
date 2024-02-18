@@ -1,28 +1,34 @@
 import { BadgeCheckIcon, CheckCircleIcon, ClockIcon, CodeIcon, DownloadCloud } from "lucide-react"
 import { CardContent, Card } from "@/components/ui/card"
-import { STAGES, Stages } from "./progress-view";
 import IndeterminateProgressBar from "@/components/indeterminate-loading-bar";
+import { STAGES, Stage } from "./progress-view";
 
-export default function LoadingStagesCards({ status }: { status: keyof typeof Stages }) {
+export default function LoadingStagesCards({ status }: { status: Stage }) {
     const LOADING_STAGES = [
         {
-            title: "Pulling repository",
-            status: Stages.STARTING,
-            description: "Loading the container image",
+            title: "Deployed",
+            status: "deployed",
+            description: "deployed",
             icon: <DownloadCloud className="w-6 h-6" />
         },
         {
-            title: "Deploying application code",
-            status: Stages.STARTED,
-            description: "Publishing your application",
-            icon: <CodeIcon className="w-6 h-6" />
+            title: "Booting",
+            status: "booting",
+            description: "booting",
+            icon: <DownloadCloud className="w-6 h-6" />
         },
         {
-            title: "Verifying install",
-            status: Stages.DEPLOYED,
-            description: "Waiting for the server to come online",
-            icon: <BadgeCheckIcon className="w-6 h-6" />
-        }
+            title: "Booted",
+            status: "booted",
+            description: "deployed",
+            icon: <DownloadCloud className="w-6 h-6" />
+        },
+        {
+            title: "Validating",
+            status: "validating",
+            description: "validating",
+            icon: <DownloadCloud className="w-6 h-6" />
+        },
     ]
 
     return (
