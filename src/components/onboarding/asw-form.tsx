@@ -27,10 +27,6 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
     const handleSubmit = (e: any) => {
         e.preventDefault()
         if (deploying) return;
-        console.log("Deploying", JSON.stringify({
-            accessKey: e.target["access-key"].value,
-            secret: e.target["secret"].value,
-        }))
         setDeploying(true)
         fetch("http://localhost:3001/start", {
             method: "POST",
@@ -112,6 +108,9 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <div className="flex flex-col gap-2">
                     {
                         ENVIRONMENT_VARIABLES.map((envVar: EnvironmentVariable) => <EnvironmentVariableItem key={envVar.key} envVar={envVar} disabled={deploying} />)
+                    }
+                    {
+                        ENVIRONMENT_VARIABLES.length === 0 && <p className="text-slate-500 text-sm font-normal">No environment variables are required for this deployment.</p>
                     }
                 </div>
             </div>
