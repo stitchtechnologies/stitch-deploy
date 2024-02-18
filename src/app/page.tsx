@@ -1,22 +1,16 @@
-"use client";
 import Head from "next/head"
-import LeftView from "@/components/onboarding/left-view";
-import RightView from "@/components/onboarding/right-view";
-import { useEffect } from "react";
+import Image from "next/image"
 
-export default function OrganizationOnboarding() {
-  // TODO is there a better way to apply styles to the body?
-  useEffect(() => {
-    document.querySelector("body")!.classList.add("overflow-hidden");
-  }, []);
-
+export default function Home() {
   return (
-    <div className="flex flex-row items-center h-screen overscroll-none overflow-hidden">
+    <div className="flex flex-row items-center justify-center h-screen overscroll-none overflow-hidden">
       <Head>
-        <title>Product x Acme | Onboarding</title>
+        <title>Stitch Deploy</title>
       </Head>
-      <LeftView />
-      <RightView />
+      <div className="flex gap-2">
+        <Image src="/favicon-dark.svg" alt="Stitch Deploy" width={32} height={32} />
+        <span className="text-4xl font-bold">Stitch</span>
+      </div>
     </div>
   )
 }

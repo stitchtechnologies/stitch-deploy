@@ -6,17 +6,18 @@ import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import EnvironmentVariableItem, { EnvironmentVariable } from "./environment-variable-item"
+import Link from "next/link";
 
 // TODO these should be coming from the backend
-const ENVIRONMENT_VARIABLES = [
-    {
-        key: "DATABASE_URL",
-        value: "postgres://"
-    },
-    {
-        key: "SECRET_KEY",
-        value: "supersecret"
-    }
+const ENVIRONMENT_VARIABLES: EnvironmentVariable[] = [
+    // {
+    //     key: "DATABASE_URL",
+    //     value: "postgres://"
+    // },
+    // {
+    //     key: "SECRET_KEY",
+    //     value: "supersecret"
+    // }
 ]
 
 export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubmitDeploy: (id: string) => void }) {
@@ -56,15 +57,15 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <h2 className="text-sm">Services being deployed</h2>
                 <div className="text-sm text-slate-400 mb-3">A list of services which will be deployed after completing this form. Deploying additional services require additional confirmation from your side.</div>
                 <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
-                    <div className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
+                    <Link href={"https://github.com/langfuse/langfuse"} target="_blank" className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                         <h3 className="text-slate-900 text-base font-semibold flex gap-1">
                             <Image src={"/product.png"} alt={"product"} width={16} height={16} />
-                            Product
+                            Langfuse
                         </h3>
                         <p className="text-slate-500 text-sm font-normal">
-                            Open source tool for analytics, secrets management, deployment, testing, monitoring, logging, infra, GitOps.
+                            Open source LLM observability, analytics, prompt management, evaluations, tests, monitoring, logging, tracing, LLMOps.
                         </p>
-                    </div>
+                    </Link>
                 </div>
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
@@ -74,7 +75,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
                     <div className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                         <h3 className="text-slate-900 text-base font-semibold">CPU</h3>
-                        <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 1 vCPU.</p>
+                        <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 2 vCPU.</p>
                     </div>
                     <div className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                         <h3 className="text-slate-900 text-base font-semibold">GPU</h3>
@@ -82,7 +83,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                     </div>
                     <div className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                         <h3 className="text-slate-900 text-base font-semibold">Memory</h3>
-                        <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 2 GiB.</p>
+                        <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 4 GiB.</p>
                     </div>
                     <div className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                         <h3 className="text-slate-900 text-base font-semibold">Storage</h3>
@@ -93,12 +94,12 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
             <div>
                 <h2 className="text-sm">AWS key</h2>
-                <div className="text-sm text-slate-400 mb-3">The key will not be shared with Product and is encrypted before its stored.</div>
+                <div className="text-sm text-slate-400 mb-3">The key will not be shared with Langfuse and is encrypted before its stored.</div>
                 <Input type="text" name="access-key" placeholder="AKIAIOSFODNN7EXAMPLE" disabled={deploying} />
             </div>
             <div>
                 <h2 className="text-sm">AWS Secret</h2>
-                <div className="text-sm text-slate-400 mb-3">The secret will not be shared with Product and is encrypted before its stored.</div>
+                <div className="text-sm text-slate-400 mb-3">The secret will not be shared with Langfuse and is encrypted before its stored.</div>
                 <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" disabled={deploying} />
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />

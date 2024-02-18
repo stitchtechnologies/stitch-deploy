@@ -37,7 +37,7 @@ export default function RightView() {
     return (
         <div className="flex flex-col flex-1 bg-[#00000005] h-screen px-6 pt-12 overflow-y-auto overscroll-none">
             <div>
-                <h1 className="text-3xl font-medium mb-12">Deploy Product to your Cloud</h1>
+                <h1 className="text-3xl font-medium mb-12">Deploy Langfuse to your Cloud</h1>
                 {!showProgess && (
                     <>
                         <div className="mb-3 text-sm">Select Platform</div>
