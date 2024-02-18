@@ -32,7 +32,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
             secret: e.target["secret"].value,
         }))
         setDeploying(true)
-        fetch("http://localhost:3001/start", {
+        fetch(`//${process.env.NEXT_PUBLIC_SERVER_HOST}/api/deploy/start`, {
             method: "POST",
             headers: new Headers({
                 "Content-Type": "application/json",
