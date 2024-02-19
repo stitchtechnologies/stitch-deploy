@@ -120,13 +120,13 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
                 <hr className="my-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
                 <div className="px-6">
                     <h2 className="text-sm font-semibold flex gap-1 items-center mb-6">
-                        <span>System requirements</span>
-                        <InformationToolTip content={<p>We will deploy these services with these requirements.</p>} />
+                        <span>Services to be provisioned</span>
+                        <InformationToolTip content={<p>We will deploy the following services on your cloud.</p>} />
                     </h2>
                     {/* TODO these requirements should change based on your cloud provider */}
                     <div>
                         <div className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
-                            <h3 className="text-slate-900 text-base font-semibold">t2.medium</h3>
+                            <h3 className="text-slate-900 text-base font-semibold">EC2 t2.medium</h3>
                             <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 2 vCPU, 4 GiB of memory and 1x8 GiB of storage.</p>
                         </div>
                     </div>
