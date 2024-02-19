@@ -1,4 +1,4 @@
-import { OrganizationContext } from "@/app/[organization]/page";
+import { OrganizationContext } from "@/lib/organization-context";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";

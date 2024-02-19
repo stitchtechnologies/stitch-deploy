@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import EnvironmentVariableItem from "./environment-variable-item"
 import Link from "next/link";
 import { EnvironmentVariable } from "@prisma/client";
-import { OrganizationContext } from "@/app/[organization]/page";
+import { OrganizationContext } from "@/lib/organization-context";
 
 export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubmitDeploy: (id: string) => void }) {
     const { organization } = useContext(OrganizationContext);

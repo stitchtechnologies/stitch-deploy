@@ -1,6 +1,6 @@
-import { OrganizationContext } from "@/app/[organization]/page";
 import { Button } from "@/components/ui/button"
 import { CardContent, Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { OrganizationContext } from "@/lib/organization-context";
 import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { useContext } from "react";

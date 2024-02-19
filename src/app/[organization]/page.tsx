@@ -1,19 +1,10 @@
 "use client";
 import LeftView from "@/components/onboarding/left-view";
 import RightView from "@/components/onboarding/right-view";
-import { EnvironmentVariable, Organization, Service } from "@prisma/client";
+import { OrganizationContext, OrganizationContextType } from "@/lib/organization-context";
 import { LoaderIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
-
-type OrganizationContextType = {
-    organization: Organization & {
-        services: (Service & {
-            environmentVariables: EnvironmentVariable[]
-        })[]
-    }
-}
-export const OrganizationContext = createContext<OrganizationContextType>({} as any);
+import { useEffect, useState } from "react";
 
 export default function OrganizationOnboarding({ params }: { params: { organization: string } }) {
     const router = useRouter();
@@ -41,7 +32,7 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
             }).catch((error) => {
                 console.log(error)
             });
-    }, []);
+    }, [params.organization, router]);
 
     if (loadingOrganization) {
         return (

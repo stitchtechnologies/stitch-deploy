@@ -11,7 +11,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Footer from "./footer";
-import { OrganizationContext } from "@/app/[organization]/page";
+import { OrganizationContext } from "@/lib/organization-context";
 
 const PLATFORMS_COMING_SOON = [
     {
