@@ -2,7 +2,8 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import { OrganizationContext } from "@/lib/organization-context";
 import { Service, EnvironmentVariable as PrismaEnvironmentVariable } from "@prisma/client";
 import EnvironmentVariableItem from "./environment-variable-item";
-import { InformationToolTip, ServiceEnvironmentVariables } from "@/app/[organization]/page";
+import { ServiceEnvironmentVariables } from "@/app/[organization]/page";
+import InformationToolTip from "../information-tooltip";
 
 type ServiceWithEnvironmentVariables = Service & { environmentVariables: PrismaEnvironmentVariable[] }
 

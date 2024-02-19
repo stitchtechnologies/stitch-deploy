@@ -3,10 +3,10 @@ import Footer from "@/components/onboarding/footer";
 import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { OrganizationContext, OrganizationContextType } from "@/lib/organization-context";
-import { Info, Loader2, LoaderIcon } from "lucide-react";
+import { Loader2, LoaderIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import {
     Card,
     CardContent,
@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import OrganizationEnvironmentVariables from "@/components/onboarding/organization-environment-variables";
 import { Checkbox } from "@/components/ui/checkbox";
 import ProgressView from "@/components/onboarding/progress-view/progress-view";
+import InformationToolTip from "@/components/information-tooltip";
 
 export type ServiceEnvironmentVariables = {
     [serviceName: string]: {
@@ -52,21 +53,6 @@ const PLATFORMS_COMING_SOON = [
         image: "/custom.png"
     }
 ]
-
-export const InformationToolTip = ({ content }: { content: ReactNode }) => {
-    return (
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger>
-                    <Info className="h-4 w-4 text-slate-500" />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-64 font-normal">
-                    {content}
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
-    )
-}
 
 const StageZeroCard = () => {
     const { organization } = useContext(OrganizationContext);
