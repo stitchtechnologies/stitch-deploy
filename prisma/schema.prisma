@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String    @id @default(uuid())
+  title     String    @db.VarChar(255)
+  slug      String    @unique @db.VarChar(255)
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  image     String    @db.VarChar(255)
+  services  Service[]
+}
+
+model Service {
+  id                   String                @id @default(uuid())
+  title                String                @db.VarChar(255)
+  description          String                @db.Text
+  image                String                @db.VarChar(255)
+  externalUrl          String                @db.VarChar(255)
+  readMe               String                @db.Text
+  script               String                @db.Text
+  createdAt            DateTime              @default(now()) @db.Timestamp(6)
+  environmentVariables EnvironmentVariable[]
+  Organization         Organization?         @relation(fields: [organizationId], references: [id])
+  organizationId       String?
+}
+
+model EnvironmentVariable {
+  id        String   @id @default(uuid())
+  key       String   @db.VarChar(255)
+  value     String   @db.Text
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  Service   Service? @relation(fields: [serviceId], references: [id])
+  serviceId String?
+}
