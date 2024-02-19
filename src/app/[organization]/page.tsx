@@ -116,8 +116,8 @@ const StageZeroCard = () => {
                         </>} />
 
                     </h2>
-                    <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
-                        {organization.services.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
+                    <div>
+                        {organization.services.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                             <h3 className="text-slate-900 text-base font-semibold flex gap-1 items-center">
                                 <Image src={service.image} alt={service.title} width={16} height={16} className="h-4 w-4" />
                                 {service.title}
@@ -135,8 +135,8 @@ const StageZeroCard = () => {
                         <InformationToolTip content={<p>We will deploy these services with these requirements.</p>} />
                     </h2>
                     {/* TODO these requirements should change based on your cloud provider */}
-                    <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
-                        <div className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
+                    <div>
+                        <div className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                             <h3 className="text-slate-900 text-base font-semibold">t2.medium</h3>
                             <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 2 vCPU, 4 GiB of memory and 1x8 GiB of storage.</p>
                         </div>
