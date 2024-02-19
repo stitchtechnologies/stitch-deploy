@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useContext } from "react";
 import { OrganizationContext } from "@/lib/organization-context";
 import { Service, EnvironmentVariable as PrismaEnvironmentVariable } from "@prisma/client";
-import { ServiceEnvironmentVariables } from "./asw-form";
 import EnvironmentVariableItem from "./environment-variable-item";
+import { InformationToolTip, ServiceEnvironmentVariables } from "@/app/[organization]/page";
 
 type ServiceWithEnvironmentVariables = Service & { environmentVariables: PrismaEnvironmentVariable[] }
 
@@ -24,13 +24,15 @@ function ServiceEnvironmentVariables({ disabled, service, setEnvironmentVariable
     )
 }
 
-export default function OrganizationEnvironmentVariables({ disabled, servicesEnvironmentVariables, setServicesEnvironmentVariables }: { disabled: boolean, servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>> }) {
+export default function OrganizationEnvironmentVariables({ servicesEnvironmentVariables, setServicesEnvironmentVariables }: { servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>> }) {
     const { organization } = useContext(OrganizationContext);
 
     return (
         <div>
-            <h2 className="text-sm">Environment variables</h2>
-            <div className="text-sm text-slate-400 mb-3">Variables below were defined by {organization.title}. All variables stay on your environment and are not reported back to {organization.title}.</div>
+            <h2 className="text-sm font-semibold flex gap-1 items-center mb-3">
+                <span>Environment variables</span>
+                <InformationToolTip content={<p>Variables below were defined by {organization.title}. All variables stay on your environment and are not reported back to {organization.title}.</p>} />
+            </h2>
             {organization.services.map((service) => {
                 const serviceEnvVars = servicesEnvironmentVariables[service.id] || {};
                 const handleSetEnvironmentVariables = (key: string, value: string) => {
@@ -44,7 +46,7 @@ export default function OrganizationEnvironmentVariables({ disabled, servicesEnv
                         return newServicesEnvironmentVariables
                     })
                 }
-                return <ServiceEnvironmentVariables key={service.id} disabled={disabled} service={service} environmentVariables={serviceEnvVars} setEnvironmentVariables={handleSetEnvironmentVariables} />
+                return <ServiceEnvironmentVariables key={service.id} disabled={false} service={service} environmentVariables={serviceEnvVars} setEnvironmentVariables={handleSetEnvironmentVariables} />
             })}
         </div>
     )

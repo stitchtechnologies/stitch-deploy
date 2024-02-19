@@ -10,7 +10,6 @@ export default function ProgressView(props: { id: string }) {
     const [status, setStatus] = useState<Stage>("deployed");
     const [url, setUrl] = useState("");
 
-    // TODO refactor this with correct backend changes
     useEffect(() => {
         const getStatus = () => {
             if (status === "complete") {
@@ -36,7 +35,7 @@ export default function ProgressView(props: { id: string }) {
                 })
         }
         getStatus();
-    }, []);
+    }, [props.id]);
 
     if (status === "complete") {
         return <CompleteCard url={url || ""} />

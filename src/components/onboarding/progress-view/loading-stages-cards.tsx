@@ -35,7 +35,7 @@ export default function LoadingStagesCards({ status }: { status: Stage }) {
         <div className="grid gap-6 max-w-3xl w-full mx-auto">
             {LOADING_STAGES.map((stage) => {
                 return (
-                    <Card key={stage.title}>
+                    <Card key={stage.title} className="shadow">
                         <CardContent className="p-6">
                             <div className="flex items-center gap-4">
                                 {stage.icon}

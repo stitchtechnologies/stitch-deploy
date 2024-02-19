@@ -12,10 +12,10 @@ export default function CompleteCard({ url }: { url: string }) {
     const readMe = organization.services[0].readMe.replaceAll('{{HOSTNAME}}', url)
 
     return (
-        <div className="grid gap-6 max-w-3xl w-full mx-auto">
+        <div className="grid gap-6 max-w-3xl w-full mx-auto shadow">
             <Card>
                 <CardHeader>
-                    <CardTitle>Successfully deployed</CardTitle>
+                    <CardTitle>Successfully deployed!</CardTitle>
                     <CardDescription>View your application at the following URL:</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center">
@@ -25,7 +25,7 @@ export default function CompleteCard({ url }: { url: string }) {
                             <ExternalLink className="w-4 h-4" />
                         </Button>
                     </Link>
-                    <Markdown className={"markdown self-start"}>{readMe}</Markdown>
+                    {/* <Markdown className={"markdown self-start"}>{readMe}</Markdown> */}
                 </CardContent>
             </Card>
         </div>

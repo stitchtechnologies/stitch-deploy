@@ -10,7 +10,7 @@ import { ScrollArea } from "../ui/scroll-area";
 
 export default function Footer() {
     return (
-        <footer className="text-slate-500 flex gap-10 text-sm justify-center font-normal my-4">
+        <footer className="text-slate-500 flex gap-10 text-sm justify-center font-normal mb-4">
             <Dialog>
                 <DialogTrigger>
                     <a>Privacy Policy</a>
