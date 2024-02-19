@@ -38,7 +38,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
             .then(() => setDeploying(false))
             .catch((err) => {
                 console.error(err)
-                window.alert(err)
+                window.alert("Failed to deploy services. Please try again or contact raj@stitch.tech for support.")
                 setDeploying(false)
             })
     }
