@@ -27,6 +27,7 @@ model Service {
   externalUrl          String                @db.VarChar(255)
   readMe               String                @db.Text
   script               String                @db.Text
+  port                 String?               @db.VarChar(255)
   createdAt            DateTime              @default(now()) @db.Timestamp(6)
   environmentVariables EnvironmentVariable[]
   Organization         Organization?         @relation(fields: [organizationId], references: [id])
