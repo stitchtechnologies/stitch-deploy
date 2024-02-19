@@ -1,4 +1,4 @@
-import { BadgeCheckIcon, CheckCircleIcon, ClockIcon, CodeIcon, DownloadCloud } from "lucide-react"
+import { BadgeCheckIcon, CheckCircleIcon, ClockIcon, CodeIcon, DownloadCloud, ListChecks, Loader, Power, UploadCloud } from "lucide-react"
 import { CardContent, Card } from "@/components/ui/card"
 import IndeterminateProgressBar from "@/components/indeterminate-loading-bar";
 import { STAGES, Stage } from "./progress-view";
@@ -8,26 +8,26 @@ export default function LoadingStagesCards({ status }: { status: Stage }) {
         {
             title: "Deployed",
             status: "deployed",
-            description: "deployed",
-            icon: <DownloadCloud className="w-6 h-6" />
+            description: "Your cloud infra has been created.",
+            icon: <UploadCloud className="w-6 h-6" />
         },
         {
             title: "Booting",
             status: "booting",
-            description: "booting",
-            icon: <DownloadCloud className="w-6 h-6" />
+            description: "Waiting for your cloud instance to come online.",
+            icon: <Power className="w-6 h-6" />
         },
         {
-            title: "Booted",
+            title: "Installing",
             status: "booted",
-            description: "deployed",
-            icon: <DownloadCloud className="w-6 h-6" />
+            description: "Currently running the installation for your services. This may take a few minutes.",
+            icon: <Loader className="w-6 h-6 animate-spin" />
         },
         {
             title: "Validating",
             status: "validating",
-            description: "validating",
-            icon: <DownloadCloud className="w-6 h-6" />
+            description: "Your services has been installed and we are validating the installation.",
+            icon: <ListChecks className="w-6 h-6" />
         },
     ]
 
