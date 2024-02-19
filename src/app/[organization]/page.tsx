@@ -34,6 +34,7 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
             .then((data) => {
                 if (!data.success) {
                     router.push("/");
+                    return;
                 }
                 setOrganization({ organization: data.data });
                 setLoadingOrganization(false);
