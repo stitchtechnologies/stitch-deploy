@@ -2,25 +2,16 @@
 import Image from "next/image"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-import EnvironmentVariableItem, { EnvironmentVariable } from "./environment-variable-item"
+import EnvironmentVariableItem from "./environment-variable-item"
 import Link from "next/link";
-
-// TODO these should be coming from the backend
-const ENVIRONMENT_VARIABLES: EnvironmentVariable[] = [
-    // {
-    //     key: "DATABASE_URL",
-    //     value: "postgres://"
-    // },
-    // {
-    //     key: "SECRET_KEY",
-    //     value: "supersecret"
-    // }
-]
+import { EnvironmentVariable } from "@prisma/client";
+import { OrganizationContext } from "@/app/[organization]/page";
 
 export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubmitDeploy: (id: string) => void }) {
+    const { organization } = useContext(OrganizationContext);
     const [deploying, setDeploying] = useState(false);
     const [acceptedCheckbox, setAcceptedCheckbox] = useState(false);
 
@@ -35,6 +26,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 "Content-Type": "application/json",
             }),
             body: JSON.stringify({
+                organizationId: organization.id,
                 accessKey: e.target["access-key"].value,
                 secret: e.target["secret"].value,
             }),
@@ -57,19 +49,20 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <h2 className="text-sm">Services being deployed</h2>
                 <div className="text-sm text-slate-400 mb-3">A list of services which will be deployed after completing this form. Deploying additional services require additional confirmation from your side.</div>
                 <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
-                    <Link href={"https://github.com/langfuse/langfuse"} target="_blank" className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
+                    {organization.services.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                         <h3 className="text-slate-900 text-base font-semibold flex gap-1">
-                            <Image src={"/product.png"} alt={"product"} width={16} height={16} />
-                            Langfuse
+                            <Image src={service.image} alt={service.title} width={16} height={16} />
+                            {service.title}
                         </h3>
                         <p className="text-slate-500 text-sm font-normal">
-                            Open source LLM observability, analytics, prompt management, evaluations, tests, monitoring, logging, tracing, LLMOps.
+                            {service.description}
                         </p>
-                    </Link>
+                    </Link>))}
                 </div>
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
-            <div>
+            {/* TODO get system requirements from BE */}
+            {/* <div>
                 <h2 className="text-sm">System requirements</h2>
                 <div className="text-sm text-slate-400 mb-3">A list of services which will be deployed after completing this form. Deploying additional services require additional confirmation from your side.</div>
                 <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
@@ -91,7 +84,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                     </div>
                 </div>
             </div>
-            <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
+            <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" /> */}
             <div>
                 <h2 className="text-sm">AWS key</h2>
                 <div className="text-sm text-slate-400 mb-3">The key will not be shared with Langfuse and is encrypted before its stored.</div>
@@ -105,15 +98,20 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
             <div>
                 <h2 className="text-sm">Environment variables</h2>
-                <div className="text-sm text-slate-400 mb-3">Variables below were defined by Product. All variables stay on your environment and are not reported back to Product.</div>
-                <div className="flex flex-col gap-2">
-                    {
-                        ENVIRONMENT_VARIABLES.map((envVar: EnvironmentVariable) => <EnvironmentVariableItem key={envVar.key} envVar={envVar} disabled={deploying} />)
-                    }
-                    {
-                        ENVIRONMENT_VARIABLES.length === 0 && <p className="text-slate-500 text-sm font-normal">No environment variables are required for this deployment.</p>
-                    }
-                </div>
+                <div className="text-sm text-slate-400 mb-3">Variables below were defined by {organization.title}. All variables stay on your environment and are not reported back to {organization.title}.</div>
+                {organization.services.map((service) => {
+                    const envVars = service.environmentVariables;
+                    if (envVars.length === 0) return (
+                        <p key={service.id} className="text-slate-500 text-sm font-normal">No environment variables are required for the {service.title} service.</p>
+                    )
+                    return (
+                        <div key={service.id} className="flex flex-col gap-2">
+                            {
+                                envVars.map((envVar: EnvironmentVariable) => <EnvironmentVariableItem key={envVar.key} envVar={envVar} disabled={deploying} />)
+                            }
+                        </div>
+                    )
+                })}
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
             <div>

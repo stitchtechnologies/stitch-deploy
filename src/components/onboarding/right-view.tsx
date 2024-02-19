@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import ProgressView from "@/components/onboarding/progress-view/progress-view"
 import AWSForm from "@/components/onboarding/asw-form"
 import {
@@ -11,6 +11,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Footer from "./footer";
+import { OrganizationContext } from "@/app/[organization]/page";
 
 const PLATFORMS_COMING_SOON = [
     {
@@ -31,13 +32,14 @@ const PLATFORMS_COMING_SOON = [
 ]
 
 export default function RightView() {
+    const { organization } = useContext(OrganizationContext);
     const [showProgess, setShowProgress] = useState(false);
     const [id, setId] = useState("");
 
     return (
         <div className="flex flex-col flex-1 bg-[#00000005] h-screen px-6 pt-12 overflow-y-auto overscroll-none">
             <div>
-                <h1 className="text-3xl font-medium mb-12">Deploy Langfuse to your Cloud</h1>
+                <h1 className="text-3xl font-medium mb-12">Deploy {organization.title} to your Cloud</h1>
                 {!showProgess && (
                     <>
                         <div className="mb-3 text-sm">Select Platform</div>

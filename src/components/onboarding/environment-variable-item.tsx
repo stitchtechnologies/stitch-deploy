@@ -3,11 +3,7 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { Code, Eye } from "lucide-react"
 import { Toggle } from "@/components/ui/toggle"
-
-export type EnvironmentVariable = {
-    key: string
-    value: string
-}
+import { EnvironmentVariable } from "@prisma/client";
 
 export default function EnvironmentVariableItem({ envVar, disabled }: { envVar: EnvironmentVariable, disabled: boolean }) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)

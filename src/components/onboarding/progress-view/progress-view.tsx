@@ -30,7 +30,6 @@ export default function ProgressView(props: { id: string }) {
                     } else {
                         setUrl(res.url)
                     }
-                    console.log(res)
                 })
                 .catch((err) => {
                     console.error(err)
