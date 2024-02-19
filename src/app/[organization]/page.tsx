@@ -343,10 +343,10 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
                                     )
                                 }
                             </Card>
-                            <div className="flex gap-4 mt-8 mb-12">
+                            <div className="flex gap-4 mt-2 mb-12">
                                 {
                                     [0, 1, 2].map((i) => (
-                                        <div key={i} className={cn("w-3 h-3 rounded-full", { "bg-slate-600": stage > i, "bg-black": stage === i, "bg-slate-300": stage < i })}></div>
+                                        <div key={i} className={cn("w-1 h-1 rounded-full", { "bg-slate-600": stage > i, "bg-black": stage === i, "bg-slate-300": stage < i })}></div>
                                     ))
                                 }
                             </div>
