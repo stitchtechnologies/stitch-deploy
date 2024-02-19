@@ -5,15 +5,28 @@ import { Button } from "@/components/ui/button"
 import { useContext, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-import EnvironmentVariableItem from "./environment-variable-item"
 import Link from "next/link";
-import { EnvironmentVariable } from "@prisma/client";
 import { OrganizationContext } from "@/lib/organization-context";
+import OrganizationEnvironmentVariables from "./organization-environment-variables";
+
+export type ServiceEnvironmentVariables = {
+    [serviceName: string]: {
+        [key: string]: string
+    }
+}
 
 export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubmitDeploy: (id: string) => void }) {
     const { organization } = useContext(OrganizationContext);
     const [deploying, setDeploying] = useState(false);
     const [acceptedCheckbox, setAcceptedCheckbox] = useState(false);
+    const [servicesEnvironmentVariables, setServicesEnvironmentVariables] = useState<ServiceEnvironmentVariables>(organization.services.reduce((acc, service) => {
+        const reducedServiceEnv = service.environmentVariables.reduce((acc2, envVar) => {
+            acc2[envVar.key] = ""
+            return acc2
+        }, {} as { [key: string]: string })
+        acc[service.id] = reducedServiceEnv
+        return acc
+    }, {} as ServiceEnvironmentVariables))
 
     // TODO refactor this
     const handleSubmit = (e: any) => {
@@ -29,6 +42,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 organizationId: organization.id,
                 accessKey: e.target["access-key"].value,
                 secret: e.target["secret"].value,
+                servicesEnvironmentVariables,
             }),
         })
             .then((res) => res.json())
@@ -96,23 +110,7 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" disabled={deploying} />
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
-            <div>
-                <h2 className="text-sm">Environment variables</h2>
-                <div className="text-sm text-slate-400 mb-3">Variables below were defined by {organization.title}. All variables stay on your environment and are not reported back to {organization.title}.</div>
-                {organization.services.map((service) => {
-                    const envVars = service.environmentVariables;
-                    if (envVars.length === 0) return (
-                        <p key={service.id} className="text-slate-500 text-sm font-normal">No environment variables are required for the {service.title} service.</p>
-                    )
-                    return (
-                        <div key={service.id} className="flex flex-col gap-2">
-                            {
-                                envVars.map((envVar: EnvironmentVariable) => <EnvironmentVariableItem key={envVar.key} envVar={envVar} disabled={deploying} />)
-                            }
-                        </div>
-                    )
-                })}
-            </div>
+            <OrganizationEnvironmentVariables disabled={deploying} servicesEnvironmentVariables={servicesEnvironmentVariables} setServicesEnvironmentVariables={setServicesEnvironmentVariables} />
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
             <div>
                 <div className="flex items-center space-x-2">
