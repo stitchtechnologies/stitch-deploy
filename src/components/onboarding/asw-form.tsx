@@ -50,8 +50,8 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
                 <div className="text-sm text-slate-400 mb-3">A list of services which will be deployed after completing this form. Deploying additional services require additional confirmation from your side.</div>
                 <div className="gap-x-3 gap-y-3 grid grid-cols-2 xs:grid-cols-2">
                     {organization.services.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex w-[330px] flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
-                        <h3 className="text-slate-900 text-base font-semibold flex gap-1">
-                            <Image src={service.image} alt={service.title} width={16} height={16} />
+                        <h3 className="text-slate-900 text-base font-semibold flex gap-1 items-center">
+                            <Image src={service.image} alt={service.title} width={16} height={16} className="h-4 w-4" />
                             {service.title}
                         </h3>
                         <p className="text-slate-500 text-sm font-normal">
