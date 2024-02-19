@@ -54,8 +54,12 @@ const PLATFORMS_COMING_SOON = [
     }
 ]
 
-const StageZeroCard = () => {
+const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boolean) => void }) => {
     const { organization } = useContext(OrganizationContext);
+
+    useEffect(() => {
+        setStageCompleted(true)
+    }, [setStageCompleted])
 
     return (
         <>
@@ -100,7 +104,6 @@ const StageZeroCard = () => {
                             <br />
                             <p>Deploying additional services require additional confirmation from your side.</p>
                         </>} />
-
                     </h2>
                     <div>
                         {organization.services.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
@@ -315,7 +318,7 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
                     stage < 3 && (
                         <>
                             <Card className="shadow max-w-[600px] bg-white">
-                                {stage === 0 && <StageZeroCard />}
+                                {stage === 0 && <StageZeroCard setStageCompleted={setStageCompleted} />}
                                 {stage === 1 && <StageOneCard servicesEnvironmentVariables={servicesEnvironmentVariables} setServicesEnvironmentVariables={setServicesEnvironmentVariables} accessKey={accessKey} setAccessKey={setAccessKey} secret={secret} setSecret={setSecret} setStageCompleted={setStageCompleted} />}
                                 {stage === 2 && <StageTwoCard acceptedCheckbox={acceptedCheckbox} setAcceptedCheckbox={setAcceptedCheckbox} setStageCompleted={setStageCompleted} />}
                                 {
