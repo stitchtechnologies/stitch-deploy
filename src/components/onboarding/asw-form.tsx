@@ -87,12 +87,12 @@ export default function AWSForm({ onSubmitDeploy: handleSubmitDeploy }: { onSubm
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" /> */}
             <div>
                 <h2 className="text-sm">AWS key</h2>
-                <div className="text-sm text-slate-400 mb-3">The key will not be shared with Langfuse and is encrypted before its stored.</div>
+                <div className="text-sm text-slate-400 mb-3">The key will not be shared with {organization.title} and is encrypted before its stored.</div>
                 <Input type="text" name="access-key" placeholder="AKIAIOSFODNN7EXAMPLE" disabled={deploying} />
             </div>
             <div>
                 <h2 className="text-sm">AWS Secret</h2>
-                <div className="text-sm text-slate-400 mb-3">The secret will not be shared with Langfuse and is encrypted before its stored.</div>
+                <div className="text-sm text-slate-400 mb-3">The secret will not be shared with {organization.title} and is encrypted before its stored.</div>
                 <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" disabled={deploying} />
             </div>
             <hr className="w-full h-[1px] bg-[#E2E8F0] border-0" />
