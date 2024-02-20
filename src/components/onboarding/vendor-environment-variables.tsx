@@ -40,8 +40,9 @@ export default function VendorEnvironmentVariablesForm({ servicesEnvironmentVari
                     setServicesEnvironmentVariables((prev) => {
                         const newServicesEnvironmentVariables = { ...prev }
                         // Don't add new keys to the environment variables. Backend should check for this anyways.
-                        if (!(key in newServicesEnvironmentVariables[service.id])) {
+                        if (service.EnvironmentVariable.filter(ev => ev.key === key).length !== 1) {
                             return prev;
+
                         }
                         newServicesEnvironmentVariables[service.id] = { ...newServicesEnvironmentVariables[service.id], [key]: value }
                         return newServicesEnvironmentVariables
