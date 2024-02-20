@@ -28,6 +28,7 @@ model Service {
   externalUrl         String                @db.VarChar(255)
   readMe              String
   script              String
+  scriptV2            Json?
   port                String?               @db.VarChar(255)
   EnvironmentVariable EnvironmentVariable[]
   Vendor              Vendor?               @relation(fields: [vendorId], references: [id])

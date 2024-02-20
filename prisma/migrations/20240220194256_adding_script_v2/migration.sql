@@ -1,0 +1,6 @@
+
+ALTER TABLE "Service"
+ADD COLUMN "scriptV2" JSONB;
+
+ALTER TABLE "Vendor"
+ALTER COLUMN "userId" DROP DEFAULT;
