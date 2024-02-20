@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { inter, roboto_mono } from "./fonts";
+import { CSPostHogProvider } from "./providers";
 
 export const metadata: Metadata = {
   title: "Stitch",
@@ -29,13 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(
-        "min-h-screen bg-background bg-neutral-50 font-sans antialiased",
-        inter.variable,
-        roboto_mono.variable,
-      )}>
-        {children}
-      </body>
+      <CSPostHogProvider>
+        <body className={cn(
+          "min-h-screen bg-background bg-neutral-50 font-sans antialiased",
+          inter.variable,
+          roboto_mono.variable,
+        )}>
+          {children}
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
