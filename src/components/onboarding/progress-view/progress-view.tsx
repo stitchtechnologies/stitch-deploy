@@ -27,7 +27,7 @@ export default function ProgressView(props: { id: string }) {
                     if (res.status !== "complete") {
                         setTimeout(getStatus, 2 * 1000);
                     } else {
-                        setUrl(res.url)
+                        setUrl(res.userFriendlyUrl)
                     }
                 })
                 .catch((err) => {
