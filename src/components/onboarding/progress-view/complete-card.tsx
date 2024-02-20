@@ -7,9 +7,9 @@ import { useContext } from "react";
 import Markdown from 'react-markdown'
 
 export default function CompleteCard({ url }: { url: string }) {
-    const { organization } = useContext(VendorContext);
+    const { vendor } = useContext(VendorContext);
 
-    const readMe = organization.services[0].readMe.replaceAll('{{HOSTNAME}}', url)
+    const readMe = vendor.Service[0].readMe.replaceAll('{{HOSTNAME}}', url)
 
     return (
         <div className="grid gap-6 max-w-3xl w-full mx-auto shadow">
