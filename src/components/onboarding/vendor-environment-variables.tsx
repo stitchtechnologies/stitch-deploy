@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction, useContext } from "react";
-import { OrganizationContext } from "@/lib/organization-context";
+import { VendorContext } from "@/lib/vendor-context";
 import { Service, EnvironmentVariable as PrismaEnvironmentVariable } from "@prisma/client";
 import EnvironmentVariableItem from "./environment-variable-item";
-import { ServiceEnvironmentVariables } from "@/app/[organization]/page";
+import { ServiceEnvironmentVariables } from "@/app/[vendorId]/[serviceId]/page";
 import InformationToolTip from "../information-tooltip";
 
-type ServiceWithEnvironmentVariables = Service & { environmentVariables: PrismaEnvironmentVariable[] }
+type ServiceWithEnvironmentVariables = Service & { EnvironmentVariable: PrismaEnvironmentVariable[] }
 
 function ServiceEnvironmentVariables({ disabled, service, setEnvironmentVariables, environmentVariables }: { disabled: boolean, service: ServiceWithEnvironmentVariables, environmentVariables: { [key: string]: string }, setEnvironmentVariables: (key: string, value: string) => void }) {
-    const serviceEnvVars = service.environmentVariables;
+    const serviceEnvVars = service.EnvironmentVariable || [];
 
     if (serviceEnvVars.length === 0) {
         return (
@@ -25,16 +25,16 @@ function ServiceEnvironmentVariables({ disabled, service, setEnvironmentVariable
     )
 }
 
-export default function OrganizationEnvironmentVariables({ servicesEnvironmentVariables, setServicesEnvironmentVariables }: { servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>> }) {
-    const { organization } = useContext(OrganizationContext);
+export default function VendorEnvironmentVariablesForm({ servicesEnvironmentVariables, setServicesEnvironmentVariables }: { servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>> }) {
+    const { vendor } = useContext(VendorContext);
 
     return (
         <div>
             <h2 className="text-sm font-semibold flex gap-1 items-center mb-3">
                 <span>Environment variables</span>
-                <InformationToolTip content={<p>Variables below were defined by {organization.title}. All variables stay on your environment and are not reported back to {organization.title}.</p>} />
+                <InformationToolTip content={<p>Variables below were defined by {vendor.title}. All variables stay on your environment and are not reported back to {vendor.title}.</p>} />
             </h2>
-            {organization.services.map((service) => {
+            {vendor.Service.map((service) => {
                 const serviceEnvVars = servicesEnvironmentVariables[service.id] || {};
                 const handleSetEnvironmentVariables = (key: string, value: string) => {
                     setServicesEnvironmentVariables((prev) => {

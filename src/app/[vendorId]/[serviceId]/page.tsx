@@ -2,7 +2,7 @@
 import Footer from "@/components/onboarding/footer";
 import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { OrganizationContext, OrganizationContextType } from "@/lib/organization-context";
+import { VendorContext, VendorContextType } from "@/lib/vendor-context";
 import { Loader2, LoaderIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import OrganizationEnvironmentVariables from "@/components/onboarding/organization-environment-variables";
+import VendorEnvironmentVariablesForm from "@/components/onboarding/vendor-environment-variables";
 import { Checkbox } from "@/components/ui/checkbox";
 import ProgressView from "@/components/onboarding/progress-view/progress-view";
 import InformationToolTip from "@/components/information-tooltip";
@@ -55,7 +55,7 @@ const PLATFORMS_COMING_SOON = [
 ]
 
 const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boolean) => void }) => {
-    const { organization } = useContext(OrganizationContext);
+    const { vendor } = useContext(VendorContext);
 
     useEffect(() => {
         setStageCompleted(true)
@@ -64,8 +64,8 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
     return (
         <>
             <CardHeader>
-                <CardTitle className="mb-2">Let&apos;s deploy {organization.title} to your cloud!</CardTitle>
-                <CardDescription className="text-slate-500">You are about to deploy the latest version of {organization.title} to your private environment.</CardDescription>
+                <CardTitle className="mb-2">Let&apos;s deploy {vendor.title} to your cloud!</CardTitle>
+                <CardDescription className="text-slate-500">You are about to deploy the latest version of {vendor.title} to your private environment.</CardDescription>
             </CardHeader>
             <hr className="mb-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
             <CardContent className="px-0">
@@ -106,7 +106,7 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
                         </>} />
                     </h2>
                     <div>
-                        {organization.services.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
+                        {vendor.Service.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                             <h3 className="text-slate-900 text-base font-semibold flex gap-1 items-center">
                                 <Image src={service.image} alt={service.title} width={16} height={16} className="h-4 w-4" />
                                 {service.title}
@@ -137,7 +137,7 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
 }
 
 const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVariables, accessKey, setAccessKey, secret, setSecret, setStageCompleted }: { servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>>, accessKey: string, setAccessKey: (value: string) => void, secret: string, setSecret: (value: string) => void, setStageCompleted: (value: boolean) => void }) => {
-    const { organization } = useContext(OrganizationContext);
+    const { vendor } = useContext(VendorContext);
 
     useEffect(() => {
         setStageCompleted(accessKey.length > 0 && secret.length > 0)
@@ -155,21 +155,21 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
                     <div>
                         <h2 className="text-sm font-semibold flex gap-1 items-center mb-3">
                             <span>AWS Key</span>
-                            <InformationToolTip content={<p>The key will not be shared with {organization.title} and is encrypted before its stored.</p>} />
+                            <InformationToolTip content={<p>The key will not be shared with {vendor.title} and is encrypted before its stored.</p>} />
                         </h2>
                         <Input type="text" name="access-key" placeholder="AKIAIOSFODNN7EXAMPLE" value={accessKey} onChange={(e) => setAccessKey(e.target.value)} />
                     </div>
                     <div>
                         <h2 className="text-sm font-semibold flex gap-1 items-center mb-3">
                             <span>AWS Secret</span>
-                            <InformationToolTip content={<p>The secret will not be shared with {organization.title} and is encrypted before its stored.</p>} />
+                            <InformationToolTip content={<p>The secret will not be shared with {vendor.title} and is encrypted before its stored.</p>} />
                         </h2>
                         <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" value={secret} onChange={(e) => setSecret(e.target.value)} />
                     </div>
                 </div>
                 <hr className="my-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
                 <div className="px-6">
-                    <OrganizationEnvironmentVariables servicesEnvironmentVariables={servicesEnvironmentVariables} setServicesEnvironmentVariables={setServicesEnvironmentVariables} />
+                    <VendorEnvironmentVariablesForm servicesEnvironmentVariables={servicesEnvironmentVariables} setServicesEnvironmentVariables={setServicesEnvironmentVariables} />
                 </div>
             </CardContent>
         </>
@@ -177,7 +177,7 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
 }
 
 const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted }: { acceptedCheckbox: boolean, setAcceptedCheckbox: (value: boolean) => void, setStageCompleted: (value: boolean) => void }) => {
-    const { organization } = useContext(OrganizationContext);
+    const { vendor } = useContext(VendorContext);
 
     useEffect(() => {
         setStageCompleted(acceptedCheckbox)
@@ -186,8 +186,8 @@ const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted
     return (
         <>
             <CardHeader>
-                <CardTitle className="mb-2">Let&apos;s deploy {organization.title} to your cloud!</CardTitle>
-                <CardDescription className="text-slate-500">You are about to deploy the latest version of {organization.title} to your private environment.</CardDescription>
+                <CardTitle className="mb-2">Let&apos;s deploy {vendor.title} to your cloud!</CardTitle>
+                <CardDescription className="text-slate-500">You are about to deploy the latest version of {vendor.title} to your private environment.</CardDescription>
             </CardHeader>
             <hr className="mb-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
             <CardContent className="px-0">
@@ -211,12 +211,12 @@ const StageThreeCard = ({ deploymentId }: { deploymentId: string }) => {
     )
 }
 
-export default function OrganizationOnboarding({ params }: { params: { organization: string } }) {
+export default function VendorServiceOnboarding({ params }: { params: { vendorId: string, serviceId: string } }) {
     const router = useRouter();
     const searchParams = useSearchParams()
     const didParam = searchParams.get('did')
 
-    const [loadingOrganization, setLoadingOrganization] = useState(true);
+    const [loadingVendor, setLoadingVendor] = useState(true);
     const [stage, setStage] = useState(0);
     const [acceptedCheckbox, setAcceptedCheckbox] = useState(false);
     const [deploying, setDeploying] = useState(false);
@@ -225,9 +225,9 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
     const [secret, setSecret] = useState("");
     const [stageCompleted, setStageCompleted] = useState(true);
     const [servicesEnvironmentVariables, setServicesEnvironmentVariables] = useState<ServiceEnvironmentVariables>({})
-    const [organizationContext, setOrganizationContext] = useState<OrganizationContextType>({} as any);
+    const [vendorContext, setVendorContext] = useState<VendorContextType>({} as any);
 
-    const { organization } = organizationContext;
+    const { vendor } = vendorContext;
 
     useEffect(() => {
         if (didParam) {
@@ -237,7 +237,7 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
     }, [didParam])
 
     useEffect(() => {
-        fetch(`/api/get-organization/${params.organization}`, {
+        fetch(`/api/get-vendor/${params.vendorId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -249,25 +249,26 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
                     router.push("/");
                     return;
                 }
-                const newOrgContext = { organization: data.data } as OrganizationContextType
-                setOrganizationContext(newOrgContext);
-                newOrgContext.organization.services.reduce((acc, service) => {
-                    const reducedServiceEnv = service.environmentVariables.reduce((acc2, envVar) => {
+                const newOrgContext = { vendor: data.data } as VendorContextType
+                setVendorContext(newOrgContext);
+                newOrgContext.vendor.Service.reduce((acc, service) => {
+                    const reducedServiceEnv = service.EnvironmentVariable.reduce((acc2, envVar) => {
                         acc2[envVar.key] = ""
                         return acc2
                     }, {} as { [key: string]: string })
                     acc[service.id] = reducedServiceEnv
                     return acc
                 }, {} as ServiceEnvironmentVariables)
-                setLoadingOrganization(false);
+                setLoadingVendor(false);
             }).catch((error) => {
                 console.log(error)
             });
-    }, [params.organization, router]);
+    }, [params.vendorId, params.serviceId, router]);
 
     const handlePostDeploymentStart = (id: string) => {
         setDeploymentId(id);
-        router.push(`/${organization.slug}?did=${id}`)
+        const service = vendor.Service[0]
+        router.push(`/${vendor.slug}/${service.slug}?did=${id}`)
         setStage(3);
         setStageCompleted(false);
         setDeploying(false)
@@ -283,7 +284,8 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
                 "Content-Type": "application/json",
             }),
             body: JSON.stringify({
-                organizationId: organization.id,
+                vendorId: vendor.id,
+                serviceId: vendor.Service[0].id,
                 accessKey,
                 secret,
                 servicesEnvironmentVariables,
@@ -298,7 +300,7 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
             })
     }
 
-    if (loadingOrganization) {
+    if (loadingVendor) {
         return (
             <div className="flex h-screen justify-center items-center">
                 <LoaderIcon className="animate-spin" />
@@ -307,11 +309,11 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
     }
 
     return (
-        <OrganizationContext.Provider value={organizationContext}>
+        <VendorContext.Provider value={vendorContext}>
             <div className="flex flex-col items-center gap-4 mt-12">
                 <div className="flex gap-4 items-center text-4xl">
-                    <Image src={organization.image} alt={organization.title} width={80} height={80} />
-                    <h1>{organization.title}</h1>
+                    <Image src={vendor.image} alt={vendor.title} width={80} height={80} />
+                    <h1>{vendor.title}</h1>
                 </div>
                 <div className="text-slate-500 my-2">Powered by <span className="text-black font-bold">Stitch</span></div>
                 {
@@ -361,6 +363,6 @@ export default function OrganizationOnboarding({ params }: { params: { organizat
                 </div>
                 <Footer />
             </div>
-        </OrganizationContext.Provider>
+        </VendorContext.Provider>
     )
 }

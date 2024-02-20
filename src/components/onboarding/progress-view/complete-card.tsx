@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button"
 import { CardContent, Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { OrganizationContext } from "@/lib/organization-context";
+import { VendorContext } from "@/lib/vendor-context";
 import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { useContext } from "react";
 import Markdown from 'react-markdown'
 
 export default function CompleteCard({ url }: { url: string }) {
-    const { organization } = useContext(OrganizationContext);
+    const { organization } = useContext(VendorContext);
 
     const readMe = organization.services[0].readMe.replaceAll('{{HOSTNAME}}', url)
 
