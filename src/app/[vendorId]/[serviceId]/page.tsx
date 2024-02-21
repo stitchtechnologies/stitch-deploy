@@ -237,7 +237,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
     }, [didParam])
 
     useEffect(() => {
-        fetch(`/api/get-vendor/${params.vendorId}`, {
+        fetch(`/api/get-service-by-vendor/${params.vendorId}/${params.serviceId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
