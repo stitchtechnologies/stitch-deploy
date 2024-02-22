@@ -115,7 +115,7 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
                                 {service.title}
                             </h3>
                             <p className="text-slate-500 text-sm font-normal">
-                                {service.description}
+                                {service.description || <i>No description</i>}
                             </p>
                         </Link>))}
                     </div>
@@ -374,8 +374,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
         <VendorContext.Provider value={vendorContext}>
             <div className="flex flex-col items-center gap-4 mt-12">
                 <div className="flex gap-4 items-center text-4xl">
-                    <Image src={vendor.image} alt={vendor.title} width={80} height={80} />
-                    <h1>{vendor.title}</h1>
+                    {vendor.image !== "" && <Image src={vendor.image} alt={vendor.title} width={80} height={80} />}                    <h1>{vendor.title}</h1>
                 </div>
                 <div className="text-slate-500 my-2">Powered by <span className="text-black font-bold">Stitch</span></div>
                 {
