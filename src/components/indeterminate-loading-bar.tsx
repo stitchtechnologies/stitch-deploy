@@ -14,5 +14,5 @@ export default function IndeterminateProgressBar() {
         return () => clearInterval(interval);
     }, [])
 
-    return <Progress value={loadingValue} />
+    return <Progress value={loadingValue} className="h-2" />
 }
