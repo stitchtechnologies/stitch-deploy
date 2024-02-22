@@ -30,6 +30,7 @@ export default function ProgressView(props: { id: string }) {
                         setTimeout(getStatus, 2 * 1000);
                     } else {
                         setUrl(res.userFriendlyUrl)
+                        setStatus("complete")
                     }
                 })
                 .catch((err) => {
