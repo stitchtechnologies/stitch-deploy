@@ -152,10 +152,10 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
                 <CardTitle className="mb-2">Let&apos;s start with your cloud credentials</CardTitle>
                 <CardDescription className="text-slate-500">To deploy to AWS, we need an access key and secret with permissions.</CardDescription>
             </CardHeader>
-            <div className="px-6 mb-5 cursor-pointer">
-                <Alert onClick={() => setHelpDialogOpen(true)}>
+            <div className="px-6 mb-5">
+                <Alert onClick={() => setHelpDialogOpen(true)} className="shadow cursor-pointer">
                     <InfoIcon className="h-4 w-4" />
-                    <AlertTitle>View AWS credentials guide</AlertTitle>
+                    <AlertTitle>Click to view AWS Credentials guide</AlertTitle>
                     <AlertDescription>
                         Follow this guide to create AWS credentials.
                     </AlertDescription>
@@ -163,7 +163,6 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
             </div>
             <Dialog open={helpDialogOpen} onOpenChange={setHelpDialogOpen} >
                 <DialogContent className="min-w-[70vh]">
-
                     <DialogHeader>
                         <DialogTitle>Creating AWS Credentials</DialogTitle>
                         <DialogDescription>
@@ -171,40 +170,46 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
                         </DialogDescription>
                     </DialogHeader>
                     <ScrollArea className="h-[80vh]">
-
                         <ol className="grid grid-cols-1 gap-y-4 gap-x-8 list-decimal pl-4 sm:pl-8">
                             <li>
-                                Navigate to the  <a className="inline underline text-blue-600 hover:text-blue-800 visited:text-purple-600" target="_blank" href="https://us-east-1.console.aws.amazon.com/iam/home#/users">AWS IAM users page.</a>
+                                <div className="flex flex-col gap-2">
+                                    <span>Navigate to the <a className="inline underline text-blue-600 hover:text-blue-800 visited:text-purple-600" target="_blank" href="https://us-east-1.console.aws.amazon.com/iam/home#/users">AWS IAM users page.</a></span>
+                                </div>
                             </li>
                             <li>
-                                Create a new user named <span className="prose prose-slate">stitch-deploy</span>.
-                                <img src={"/aws_guide/create_user.png"} alt={"aws"} />
-
-                            </li>
-                            <li>Add the AmazonEC2FullAccess to the user's permission policies.
-
-                                <img src={"/aws_guide/add_policy.png"} alt={"aws"} />
+                                <div className="flex flex-col gap-2">
+                                    <span>Create a new user named <span className="font-mono">stitch-deploy</span>.</span>
+                                    <Image className="shadow w-full" src={"/aws_guide/create_user.png"} alt={"create user"} width={550} height={300} />
+                                </div>
                             </li>
                             <li>
-                                In the "Security credentials" tab, scroll down to the "Access keys" section and click on the "Create access
-                                key" button.
-
-                                <img src={"/aws_guide/create_access_key.png"} alt={"aws"} />
+                                <div className="flex flex-col gap-2">
+                                    <span>Add the <span className="font-mono">AmazonEC2FullAccess</span> to the user&apos;s permission policies.</span>
+                                    <Image className="shadow w-full" src={"/aws_guide/add_policy.png"} alt={"add policy"} width={550} height={300} />
+                                </div>
                             </li>
                             <li>
-                                Select Third-party service and check the checkbox at the bottom of the page.
-                                <img src={"/aws_guide/create_access_key_2.png"} alt={"aws"} />
-
+                                <div className="flex flex-col gap-2">
+                                    <span>In the &quot;Security credentials&quot; tab, scroll down to the &quot;Access keys&quot; section and click on the &quot;Create access
+                                        key&quot; button.</span>
+                                    <Image className="shadow w-full" src={"/aws_guide/create_access_key.png"} alt={"create access key"} width={550} height={300} />
+                                </div>
                             </li>
                             <li>
-                                A dialog box will appear with your new access key and secret access key. Make sure to save this information
-                                as it will not be shown again.
-                                <img src={"/aws_guide/store_access_key.png"} alt={"aws"} />
-
+                                <div className="flex flex-col gap-2">
+                                    <span>Select &quot;Third-party service&quot; and check the checkbox at the bottom of the page.</span>
+                                    <Image className="shadow w-full" src={"/aws_guide/create_access_key_2.png"} alt={"create access key 2"} width={550} height={300} />
+                                </div>
+                            </li>
+                            <li>
+                                <div className="flex flex-col gap-2">
+                                    <span>A dialog box will appear with your new access key and secret access key. Make sure to save this information
+                                        as it will not be shown again.</span>
+                                    <Image className="shadow w-full" src={"/aws_guide/store_access_key.png"} alt={"store access key"} width={550} height={300} />
+                                </div>
                             </li>
                         </ol>
                     </ScrollArea>
-
                 </DialogContent>
             </Dialog>
             <CardContent className="px-0">
