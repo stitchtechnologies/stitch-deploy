@@ -3,7 +3,7 @@ import Footer from "@/components/onboarding/footer";
 import { useSearchParams } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { VendorContext, VendorContextType } from "@/lib/vendor-context";
-import { Loader2, LoaderIcon } from "lucide-react";
+import { InfoIcon, Loader2, LoaderIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
@@ -29,6 +29,9 @@ import VendorEnvironmentVariablesForm from "@/components/onboarding/vendor-envir
 import { Checkbox } from "@/components/ui/checkbox";
 import ProgressView from "@/components/onboarding/progress-view/progress-view";
 import InformationToolTip from "@/components/information-tooltip";
+import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export type ServiceEnvironmentVariables = {
     [serviceName: string]: {
@@ -108,7 +111,7 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
                     <div>
                         {vendor.Service.map((service) => (<Link key={service.id} href={service.externalUrl} target="_blank" className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
                             <h3 className="text-slate-900 text-base font-semibold flex gap-1 items-center">
-                                <Image src={service.image} alt={service.title} width={16} height={16} className="h-4 w-4" />
+                                {service.image && <Image src={service.image} alt={service.title} width={16} height={16} className="h-4 w-4" />}
                                 {service.title}
                             </h3>
                             <p className="text-slate-500 text-sm font-normal">
@@ -138,7 +141,7 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
 
 const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVariables, accessKey, setAccessKey, secret, setSecret, setStageCompleted }: { servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>>, accessKey: string, setAccessKey: (value: string) => void, secret: string, setSecret: (value: string) => void, setStageCompleted: (value: boolean) => void }) => {
     const { vendor } = useContext(VendorContext);
-
+    const [helpDialogOpen, setHelpDialogOpen] = useState(false)
     useEffect(() => {
         setStageCompleted(accessKey.length > 0 && secret.length > 0)
     }, [accessKey, secret, setStageCompleted])
@@ -147,9 +150,63 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
         <>
             <CardHeader>
                 <CardTitle className="mb-2">Let&apos;s start with your cloud credentials</CardTitle>
-                <CardDescription className="text-slate-500">To deploy to AWS, we need an access key and secret with permissions. Link to guide.</CardDescription>
+                <CardDescription className="text-slate-500">To deploy to AWS, we need an access key and secret with permissions.</CardDescription>
             </CardHeader>
-            <hr className="mb-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
+            <div className="px-6 mb-5 cursor-pointer">
+                <Alert onClick={() => setHelpDialogOpen(true)}>
+                    <InfoIcon className="h-4 w-4" />
+                    <AlertTitle>View AWS credentials guide</AlertTitle>
+                    <AlertDescription>
+                        Follow this guide to create AWS credentials.
+                    </AlertDescription>
+                </Alert>
+            </div>
+            <Dialog open={helpDialogOpen} onOpenChange={setHelpDialogOpen} >
+                <DialogContent className="min-w-[70vh]">
+
+                    <DialogHeader>
+                        <DialogTitle>Creating AWS Credentials</DialogTitle>
+                        <DialogDescription>
+                            After following the steps below you can then deploy to your own VPC.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <ScrollArea className="h-[80vh]">
+
+                        <ol className="grid grid-cols-1 gap-y-4 gap-x-8 list-decimal pl-4 sm:pl-8">
+                            <li>
+                                Navigate to the  <a className="inline underline text-blue-600 hover:text-blue-800 visited:text-purple-600" target="_blank" href="https://us-east-1.console.aws.amazon.com/iam/home#/users">AWS IAM users page.</a>
+                            </li>
+                            <li>
+                                Create a new user named <span className="prose prose-slate">stitch-deploy</span>.
+                                <img src={"/aws_guide/create_user.png"} alt={"aws"} />
+
+                            </li>
+                            <li>Add the AmazonEC2FullAccess to the user's permission policies.
+
+                                <img src={"/aws_guide/add_policy.png"} alt={"aws"} />
+                            </li>
+                            <li>
+                                In the "Security credentials" tab, scroll down to the "Access keys" section and click on the "Create access
+                                key" button.
+
+                                <img src={"/aws_guide/create_access_key.png"} alt={"aws"} />
+                            </li>
+                            <li>
+                                Select Third-party service and check the checkbox at the bottom of the page.
+                                <img src={"/aws_guide/create_access_key_2.png"} alt={"aws"} />
+
+                            </li>
+                            <li>
+                                A dialog box will appear with your new access key and secret access key. Make sure to save this information
+                                as it will not be shown again.
+                                <img src={"/aws_guide/store_access_key.png"} alt={"aws"} />
+
+                            </li>
+                        </ol>
+                    </ScrollArea>
+
+                </DialogContent>
+            </Dialog>
             <CardContent className="px-0">
                 <div className="flex flex-col gap-4 px-6">
                     <div>
