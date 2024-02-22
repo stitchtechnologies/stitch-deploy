@@ -7,10 +7,13 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { ScrollArea } from "../ui/scroll-area";
+import Link from "next/link";
 
 export default function Footer() {
     return (
         <footer className="text-slate-500 flex gap-10 text-sm justify-center font-normal mb-4">
+            <Link href="https://join.slack.com/t/stitchsupport/shared_invite/zt-2d839m41h-qYy7ZTJ1mRec7zYw4Pl9oQ">Help</Link>
+            <Link href="https://docs.stitch.tech/">Documentation</Link>
             <Dialog>
                 <DialogTrigger>
                     <a>Privacy Policy</a>
