@@ -22,22 +22,20 @@ export default function CompleteCard({ url }: { url: string }) {
     const readMe = vendor.Service[0].readMe.replaceAll('{{HOSTNAME}}', url)
 
     return (
-        <div className="grid gap-6 max-w-3xl w-full mx-auto shadow">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Successfully deployed!</CardTitle>
-                    <CardDescription>View your application at the following URL:</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center">
-                    <Link target="_blank" href={url}>
-                        <Button variant={"ghost"} className="flex items-center gap-2">
-                            {url}
-                            <ExternalLink className="w-4 h-4" />
-                        </Button>
-                    </Link>
-                    <EditerMarkdown className="p-2" wrapperElement={{ 'data-color-mode': "light" }} data-color-mode={"light"} source={readMe} />
-                </CardContent>
-            </Card>
-        </div>
+        <Card className="mx-auto shadow">
+            <CardHeader>
+                <CardTitle>Successfully deployed!</CardTitle>
+                <CardDescription>View your application at the following URL:</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center">
+                <Link target="_blank" href={url}>
+                    <Button variant={"ghost"} className="flex items-center gap-2">
+                        {url}
+                        <ExternalLink className="w-4 h-4" />
+                    </Button>
+                </Link>
+                <EditerMarkdown className="p-6 max-w-[600px]" wrapperElement={{ 'data-color-mode': "light" }} data-color-mode={"light"} source={readMe} />
+            </CardContent>
+        </Card>
     )
 }
