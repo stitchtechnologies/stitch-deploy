@@ -16,10 +16,10 @@ const EditerMarkdown = dynamic(
     { ssr: false }
 );
 
-export default function CompleteCard({ url }: { url: string }) {
+export default function CompleteCard({ url, publicDns }: { url: string, publicDns: string }) {
     const { vendor } = useContext(VendorContext);
 
-    const readMe = vendor.Service[0].readMe.replaceAll('{{HOSTNAME}}', url)
+    const readMe = vendor.Service[0].readMe.replaceAll('{{PUBLIC_DNS}}', publicDns).replaceAll('{{HOSTNAME}}', url)
 
     return (
         <Card className="mx-auto shadow">
