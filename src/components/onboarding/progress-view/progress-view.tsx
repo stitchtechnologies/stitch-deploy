@@ -9,6 +9,7 @@ export const STAGES = ["deployed", "booting", "booted", "validating", "complete"
 export default function ProgressView(props: { id: string }) {
     const [status, setStatus] = useState<Stage>("deployed");
     const [url, setUrl] = useState("");
+    const [showValidation, setShowValidation] = useState<boolean>(false);
 
     useEffect(() => {
         const getStatus = () => {
@@ -24,6 +25,7 @@ export default function ProgressView(props: { id: string }) {
                 .then((res) => res.json())
                 .then((res) => {
                     setStatus(res.status)
+                    setShowValidation(res.validationUrl)
                     if (res.status !== "complete") {
                         setTimeout(getStatus, 2 * 1000);
                     } else {
@@ -41,5 +43,5 @@ export default function ProgressView(props: { id: string }) {
         return <CompleteCard url={url || ""} />
     }
 
-    return <LoadingStagesCards status={status} />
+    return <LoadingStagesCards status={status} showValidation={showValidation} />
 }

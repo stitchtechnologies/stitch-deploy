@@ -3,7 +3,7 @@ import { CardContent, Card } from "@/components/ui/card"
 import IndeterminateProgressBar from "@/components/indeterminate-loading-bar";
 import { STAGES, Stage } from "./progress-view";
 
-export default function LoadingStagesCards({ status }: { status: Stage }) {
+export default function LoadingStagesCards({ status, showValidation }: { status: Stage, showValidation: boolean }) {
     const LOADING_STAGES = [
         {
             title: "Deployed",
@@ -23,13 +23,16 @@ export default function LoadingStagesCards({ status }: { status: Stage }) {
             description: "Currently running the installation for your services. This may take a few minutes.",
             icon: <Loader className="w-6 h-6 animate-spin" />
         },
-        {
+    ]
+
+    if (showValidation) {
+        LOADING_STAGES.push({
             title: "Validating",
             status: "validating",
             description: "Your services has been installed and we are validating the installation.",
             icon: <ListChecks className="w-6 h-6" />
-        },
-    ]
+        })
+    }
 
     return (
         <div className="grid gap-6 max-w-3xl w-full mx-auto">
