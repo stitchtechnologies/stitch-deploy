@@ -25,12 +25,11 @@ export default function ProgressView(props: { id: string }) {
                 .then((res) => res.json())
                 .then((res) => {
                     setStatus(res.status)
-                    setShowValidation(res.validationUrl)
+                    setShowValidation(res.validationUrl != null)
                     if (res.status !== "complete") {
                         setTimeout(getStatus, 2 * 1000);
                     } else {
                         setUrl(res.userFriendlyUrl)
-                        setStatus("complete")
                     }
                 })
                 .catch((err) => {
