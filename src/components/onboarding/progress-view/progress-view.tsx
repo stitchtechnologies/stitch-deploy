@@ -11,6 +11,7 @@ export default function ProgressView(props: { id: string }) {
     const [url, setUrl] = useState("");
     const [publicDns, setPublicDns] = useState("");
     const [showValidation, setShowValidation] = useState<boolean>(false);
+    const [failedRetries, setFailedRetries] = useState(0);
 
     useEffect(() => {
         const getStatus = () => {
@@ -36,10 +37,14 @@ export default function ProgressView(props: { id: string }) {
                 })
                 .catch((err) => {
                     console.error(err)
+                    if (failedRetries <= 5) {
+                        setTimeout(getStatus, 2 * 1000);
+                        setFailedRetries(prev => prev + 1);
+                    }
                 })
         }
         getStatus();
-    }, [props.id]);
+    }, [failedRetries, props.id]);
 
     if (status === "complete") {
         return <CompleteCard url={url || ""} publicDns={publicDns || ""} />
