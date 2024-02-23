@@ -32,6 +32,7 @@ import InformationToolTip from "@/components/information-tooltip";
 import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import posthog from "posthog-js";
 
 export type ServiceEnvironmentVariables = {
     [serviceName: string]: {
@@ -339,6 +340,10 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
     const handleSubmit = (e: any) => {
         e.preventDefault()
         if (deploying) return;
+        posthog.capture("deploy_started", {
+            vendor: vendor.title,
+            service: vendor.Service[0].title,
+        })
         setDeploying(true)
         fetch(`//${process.env.NEXT_PUBLIC_SERVER_HOST}/api/deploy/start`, {
             method: "POST",
@@ -396,7 +401,15 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                                                 }
                                                 {
                                                     stage < 2 && (
-                                                        <Button className="w-full" disabled={stage === 2 || !stageCompleted} onClick={() => setStage(prev => prev + 1)}>Continue</Button>
+                                                        <Button className="w-full" disabled={stage === 2 || !stageCompleted} onClick={() => setStage(prev => {
+                                                            posthog.capture("next_stage_click", {
+                                                                prevStage: prev,
+                                                                newStage: prev + 1,
+                                                            })
+                                                            return prev + 1
+                                                        })}>
+                                                            Continue
+                                                        </Button>
                                                     )
                                                 }
                                                 {
