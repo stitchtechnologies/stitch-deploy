@@ -32,8 +32,18 @@ model Service {
   vendorId            String?
   scriptV2            Json?
   validationUrl       String?               @db.VarChar(255)
+  password            String?               @db.VarChar(255)
   EnvironmentVariable EnvironmentVariable[]
   Vendor              Vendor?               @relation(fields: [vendorId], references: [id])
+  Install             Install[]
+}
+
+model Install {
+  id        String   @id
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  status    String?  @db.VarChar(255)
+  serviceId String
+  Service   Service  @relation(fields: [serviceId], references: [id])
 }
 
 model EnvironmentVariable {
