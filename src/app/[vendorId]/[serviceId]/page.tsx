@@ -33,6 +33,8 @@ import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogDescription } f
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import posthog from "posthog-js";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Service } from "@prisma/client";
 
 export type ServiceEnvironmentVariables = {
     [serviceName: string]: {
@@ -140,7 +142,34 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
     )
 }
 
-const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVariables, accessKey, setAccessKey, secret, setSecret, setStageCompleted }: { servicesEnvironmentVariables: ServiceEnvironmentVariables, setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>>, accessKey: string, setAccessKey: (value: string) => void, secret: string, setSecret: (value: string) => void, setStageCompleted: (value: boolean) => void }) => {
+const StageOneCard = ({
+    servicesEnvironmentVariables,
+    setServicesEnvironmentVariables,
+    accessKey,
+    setAccessKey,
+    secret,
+    setSecret,
+    setStageCompleted,
+    accountNumber,
+    setAccountNumber,
+    awsRegion,
+    setAwsRegion,
+    service,
+}:
+    {
+        servicesEnvironmentVariables: ServiceEnvironmentVariables,
+        setServicesEnvironmentVariables: Dispatch<SetStateAction<ServiceEnvironmentVariables>>,
+        accessKey: string,
+        setAccessKey: (value: string) => void,
+        secret: string,
+        setSecret: (value: string) => void,
+        setStageCompleted: (value: boolean) => void,
+        accountNumber: string,
+        setAccountNumber: (value: string) => void,
+        awsRegion: string,
+        setAwsRegion: (value: string) => void,
+        service: Service
+    }) => {
     const { vendor } = useContext(VendorContext);
     const [helpDialogOpen, setHelpDialogOpen] = useState(false)
     useEffect(() => {
@@ -229,6 +258,50 @@ const StageOneCard = ({ servicesEnvironmentVariables, setServicesEnvironmentVari
                         </h2>
                         <Input type="password" name="secret" placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" value={secret} onChange={(e) => setSecret(e.target.value)} />
                     </div>
+                    {(service.scriptV2 as any)?.type === "cdk-ts-github" && <>
+                        <div>
+                            <h2 className="text-sm font-semibold flex gap-1 items-center mb-3">
+                                <span>AWS Account ID</span>
+                            </h2>
+                            <Input type="text" name="account-number" placeholder="123412341234" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                        </div>
+                        <div>
+                            <h2 className="text-sm font-semibold flex gap-1 items-center mb-3">
+                                <span>AWS region</span>
+                            </h2>
+                            <Select value={awsRegion} onValueChange={setAwsRegion}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="AWS Region" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="us-east-1">us-east-1 | US East (N. Virginia)</SelectItem>
+                                    <SelectItem value="us-east-2">us-east-2 | US East (Ohio)</SelectItem>
+                                    <SelectItem value="us-west-1">us-west-1 | US West (N. California)</SelectItem>
+                                    <SelectItem value="us-west-2">us-west-2 | US West (Oregon)</SelectItem>
+                                    <SelectItem value="af-south-1">af-south-1 | Africa (Cape Town)</SelectItem>
+                                    <SelectItem value="ap-east-1">ap-east-1 | Asia Pacific (Hong Kong)</SelectItem>
+                                    <SelectItem value="ap-south-1">ap-south-1 | Asia Pacific (Mumbai)</SelectItem>
+                                    <SelectItem value="ap-northeast-3">ap-northeast-3 | Asia Pacific (Osaka)</SelectItem>
+                                    <SelectItem value="ap-northeast-2">ap-northeast-2 | Asia Pacific (Seoul)</SelectItem>
+                                    <SelectItem value="ap-southeast-1">ap-southeast-1 | Asia Pacific (Singapore)</SelectItem>
+                                    <SelectItem value="ap-southeast-2">ap-southeast-2 | Asia Pacific (Sydney)</SelectItem>
+                                    <SelectItem value="ap-northeast-1">ap-northeast-1 | Asia Pacific (Tokyo)</SelectItem>
+                                    <SelectItem value="ca-central-1">ca-central-1 | Canada (Central)</SelectItem>
+                                    <SelectItem value="eu-central-1">eu-central-1 | Europe (Frankfurt)</SelectItem>
+                                    <SelectItem value="eu-west-1">eu-west-1 | Europe (Ireland)</SelectItem>
+                                    <SelectItem value="eu-west-2">eu-west-2 | Europe (London)</SelectItem>
+                                    <SelectItem value="eu-south-1">eu-south-1 | Europe (Milan)</SelectItem>
+                                    <SelectItem value="eu-west-3">eu-west-3 | Europe (Paris)</SelectItem>
+                                    <SelectItem value="eu-north-1">eu-north-1 | Europe (Stockholm)</SelectItem>
+                                    <SelectItem value="me-south-1">me-south-1 | Middle East (Bahrain)</SelectItem>
+                                    <SelectItem value="sa-east-1">sa-east-1 | South America (São Paulo)</SelectItem>
+
+                                </SelectContent>
+                            </Select>
+
+                        </div>
+                    </>}
+
                 </div>
                 <hr className="my-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
                 <div className="px-6">
@@ -290,6 +363,10 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
     const [servicesEnvironmentVariables, setServicesEnvironmentVariables] = useState<ServiceEnvironmentVariables>({})
     const [vendorContext, setVendorContext] = useState<VendorContextType>({} as any);
 
+    const [accountNumber, setAccountNumber] = useState<string>("");
+    const [awsRegion, setAwsRegion] = useState<string>("us-east-1");
+    const [service, setService] = useState<Service>();
+
     const { vendor } = vendorContext;
 
     useEffect(() => {
@@ -312,6 +389,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                     router.push("/");
                     return;
                 }
+                setService(data.data.Service[0])
                 const newOrgContext = { vendor: data.data } as VendorContextType
                 setVendorContext(newOrgContext);
                 newOrgContext.vendor.Service.reduce((acc, service) => {
@@ -356,6 +434,8 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                 accessKey,
                 secret,
                 servicesEnvironmentVariables,
+                accountNumber,
+                awsRegion
             }),
         })
             .then((res) => res.json())
@@ -379,7 +459,8 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
         <VendorContext.Provider value={vendorContext}>
             <div className="flex flex-col items-center gap-4 mt-12">
                 <div className="flex gap-4 items-center text-4xl">
-                    {vendor.image !== "" && <Image className="rounded-xl" src={vendor.image} alt={vendor.title} width={80} height={80} />}                    <h1>{vendor.title}</h1>
+                    {vendor.image !== "" && <Image className="rounded-xl" src={vendor.image} alt={vendor.title} width={80} height={80} />}
+                    <h1>{vendor.title}</h1>
                 </div>
                 <div className="text-slate-500 my-2">Powered by <span className="text-black font-bold">Stitch</span></div>
                 {
@@ -387,7 +468,21 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                         <>
                             <Card className="shadow max-w-[600px] bg-white">
                                 {stage === 0 && <StageZeroCard setStageCompleted={setStageCompleted} />}
-                                {stage === 1 && <StageOneCard servicesEnvironmentVariables={servicesEnvironmentVariables} setServicesEnvironmentVariables={setServicesEnvironmentVariables} accessKey={accessKey} setAccessKey={setAccessKey} secret={secret} setSecret={setSecret} setStageCompleted={setStageCompleted} />}
+                                {stage === 1 && <StageOneCard
+                                    servicesEnvironmentVariables={servicesEnvironmentVariables}
+                                    setServicesEnvironmentVariables={setServicesEnvironmentVariables}
+                                    accessKey={accessKey}
+                                    setAccessKey={setAccessKey}
+                                    secret={secret}
+                                    setSecret={setSecret}
+                                    setStageCompleted={setStageCompleted}
+                                    accountNumber={accountNumber}
+                                    setAccountNumber={setAccountNumber}
+                                    awsRegion={awsRegion}
+                                    setAwsRegion={setAwsRegion}
+                                    service={service!}
+                                />
+                                }
                                 {stage === 2 && <StageTwoCard acceptedCheckbox={acceptedCheckbox} setAcceptedCheckbox={setAcceptedCheckbox} setStageCompleted={setStageCompleted} />}
                                 {
                                     stage < 3 && (
