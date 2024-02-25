@@ -1,10 +1,19 @@
-import { BadgeCheckIcon, CheckCircleIcon, ClockIcon, CodeIcon, DownloadCloud, ListChecks, Loader, Power, UploadCloud } from "lucide-react"
+import { CheckCircleIcon, ClockIcon, ListChecks, Loader, Power, UploadCloud } from "lucide-react"
 import { CardContent, Card } from "@/components/ui/card"
 import IndeterminateProgressBar from "@/components/indeterminate-loading-bar";
 import { STAGES, Stage } from "./progress-view";
+import { ReactNode } from "react";
+import Link from "next/link";
 
-export default function LoadingStagesCards({ status, showValidation }: { status: Stage, showValidation: boolean }) {
-    const LOADING_STAGES = [
+type LoadingStage = {
+    title: string,
+    status: Stage,
+    description: ReactNode,
+    icon: JSX.Element
+}
+
+export default function LoadingStagesCards({ status, showValidation, url }: { status: Stage, showValidation: boolean, url: string }) {
+    const LOADING_STAGES: LoadingStage[] = [
         {
             title: "Deployed",
             status: "deployed",
@@ -29,7 +38,10 @@ export default function LoadingStagesCards({ status, showValidation }: { status:
         LOADING_STAGES.push({
             title: "Validating",
             status: "validating",
-            description: "Your services has been installed and we are validating the installation.",
+            description: <div>
+                <p>Your services have been installed and we are validating the installation.</p>
+                <p>Once validated, the service will be available <Link href={url} className="hover:underline">here</Link>.</p>
+            </div>,
             icon: <ListChecks className="w-6 h-6" />
         })
     }

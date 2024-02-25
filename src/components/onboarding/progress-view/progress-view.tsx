@@ -28,11 +28,10 @@ export default function ProgressView(props: { id: string }) {
                 .then((res) => {
                     setStatus(res.status)
                     setShowValidation(res.validationUrl != null)
+                    setUrl(res.userFriendlyUrl)
+                    setPublicDns(res.publicDns)
                     if (res.status !== "complete") {
                         setTimeout(getStatus, 2 * 1000);
-                    } else {
-                        setUrl(res.userFriendlyUrl)
-                        setPublicDns(res.publicDns)
                     }
                 })
                 .catch((err) => {
@@ -50,5 +49,5 @@ export default function ProgressView(props: { id: string }) {
         return <CompleteCard url={url || ""} publicDns={publicDns || ""} />
     }
 
-    return <LoadingStagesCards status={status} showValidation={showValidation} />
+    return <LoadingStagesCards status={status} showValidation={showValidation} url={url} />
 }

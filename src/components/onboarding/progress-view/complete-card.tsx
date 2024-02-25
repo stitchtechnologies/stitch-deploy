@@ -34,7 +34,9 @@ export default function CompleteCard({ url, publicDns }: { url: string, publicDn
                         <ExternalLink className="w-4 h-4" />
                     </Button>
                 </Link>
-                <EditerMarkdown className="p-6 max-w-[600px]" wrapperElement={{ 'data-color-mode': "light" }} data-color-mode={"light"} source={readMe} />
+                {readMe.length > 0 && (
+                    <EditerMarkdown className="p-6 max-w-[600px]" wrapperElement={{ 'data-color-mode': "light" }} data-color-mode={"light"} source={readMe} />
+                )}
             </CardContent>
         </Card>
     )
