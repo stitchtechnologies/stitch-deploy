@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Vendor {
-  id          String    @id
-  title       String    @db.VarChar(255)
+  id          String       @id
+  title       String       @db.VarChar(255)
   description String
-  slug        String    @unique @db.VarChar(255)
-  createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  image       String    @db.VarChar(255)
+  slug        String       @unique @db.VarChar(255)
+  createdAt   DateTime     @default(now()) @db.Timestamp(6)
+  image       String       @db.VarChar(255)
   userId      String
   Service     Service[]
+  Deployment  Deployment[]
 }
 
 model Service {
@@ -36,14 +37,33 @@ model Service {
   EnvironmentVariable EnvironmentVariable[]
   Install             Install[]
   Vendor              Vendor?               @relation(fields: [vendorId], references: [id])
+  Deployment          Deployment[]
 }
 
 model Install {
   id        String   @id
   createdAt DateTime @default(now()) @db.Timestamp(6)
   serviceId String
+  // status: 'deployed' | 'booting' | 'booted' | 'validating' | 'complete'
   status    String?  @db.VarChar(255)
   Service   Service  @relation(fields: [serviceId], references: [id])
+}
+
+model Deployment {
+  id              String   @id
+  createdAt       DateTime @default(now()) @db.Timestamp(6)
+  // status: 'deployed' | 'booting' | 'booted' | 'validating' | 'complete'
+  status          String?  @db.VarChar(255)
+  awsInstanceId   String
+  url             String?
+  publicDns       String?
+  vendorId        String
+  serviceId       String
+  validationUrl   String?
+  userFriendlyUrl String?
+  deploymentKey   Json?
+  Vendor          Vendor   @relation(fields: [vendorId], references: [id])
+  Service         Service  @relation(fields: [serviceId], references: [id])
 }
 
 model EnvironmentVariable {
