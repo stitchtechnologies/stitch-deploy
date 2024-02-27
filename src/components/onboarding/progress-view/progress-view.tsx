@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import CompleteCard from "./complete-card";
 import LoadingStagesCards from "./loading-stages-cards";
+import { Deployment } from "@prisma/client";
 
 export type Stage = "deployed" | "booting" | "booted" | "validating" | "complete";
 export const STAGES = ["deployed", "booting", "booted", "validating", "complete"]
@@ -25,11 +26,11 @@ export default function ProgressView(props: { id: string }) {
                 }),
             })
                 .then((res) => res.json())
-                .then((res) => {
-                    setStatus(res.status)
+                .then((res: Deployment) => {
+                    setStatus(res.status as Stage)
                     setShowValidation(res.validationUrl != null)
-                    setUrl(res.userFriendlyUrl)
-                    setPublicDns(res.publicDns)
+                    setUrl(res.userFriendlyUrl || "")
+                    setPublicDns(res.publicDns || "")
                     if (res.status !== "complete") {
                         setTimeout(getStatus, 2 * 1000);
                     }
@@ -46,7 +47,7 @@ export default function ProgressView(props: { id: string }) {
     }, [failedRetries, props.id]);
 
     if (status === "complete") {
-        return <CompleteCard url={url || ""} publicDns={publicDns || ""} />
+        return <CompleteCard url={url} publicDns={publicDns} />
     }
 
     return <LoadingStagesCards status={status} showValidation={showValidation} url={url} />
