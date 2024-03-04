@@ -35,6 +35,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import posthog from "posthog-js";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Service } from "@prisma/client";
+import { Label } from "@/components/ui/label";
 
 export type ServiceEnvironmentVariables = {
     [serviceName: string]: {
@@ -295,7 +296,6 @@ const StageOneCard = ({
                                     <SelectItem value="eu-north-1">eu-north-1 | Europe (Stockholm)</SelectItem>
                                     <SelectItem value="me-south-1">me-south-1 | Middle East (Bahrain)</SelectItem>
                                     <SelectItem value="sa-east-1">sa-east-1 | South America (São Paulo)</SelectItem>
-
                                 </SelectContent>
                             </Select>
 
@@ -312,7 +312,7 @@ const StageOneCard = ({
     )
 }
 
-const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted }: { acceptedCheckbox: boolean, setAcceptedCheckbox: (value: boolean) => void, setStageCompleted: (value: boolean) => void }) => {
+const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted, email, setEmail }: { acceptedCheckbox: boolean, setAcceptedCheckbox: (value: boolean) => void, setStageCompleted: (value: boolean) => void, email: string, setEmail: (value: string) => void }) => {
     const { vendor } = useContext(VendorContext);
 
     useEffect(() => {
@@ -335,6 +335,15 @@ const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted
                             Deploying the services will start immediately after clicking the button below.
                         </label>
                     </div>
+                </div>
+                <hr className="my-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
+                <div className="px-6">
+                    <Label htmlFor="email" className="flex gap-2 items-center mb-2">
+                        <span>Email<span className="text-slate-400 italic">- optional</span></span>
+                        <InformationToolTip content={<>
+                            <p>Once your deployment is completed, a email notifying you will be sent to this email.</p>
+                        </>} /></Label>
+                    <Input type="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
             </CardContent>
         </>
@@ -366,6 +375,8 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
     const [accountNumber, setAccountNumber] = useState<string>("");
     const [awsRegion, setAwsRegion] = useState<string>("us-east-1");
     const [service, setService] = useState<Service>();
+
+    const [email, setEmail] = useState("");
 
     const { vendor } = vendorContext;
 
@@ -435,7 +446,8 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                 secret,
                 servicesEnvironmentVariables,
                 accountNumber,
-                awsRegion
+                awsRegion,
+                email,
             }),
         })
             .then((res) => res.json())
@@ -483,7 +495,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                                     service={service!}
                                 />
                                 }
-                                {stage === 2 && <StageTwoCard acceptedCheckbox={acceptedCheckbox} setAcceptedCheckbox={setAcceptedCheckbox} setStageCompleted={setStageCompleted} />}
+                                {stage === 2 && <StageTwoCard acceptedCheckbox={acceptedCheckbox} setAcceptedCheckbox={setAcceptedCheckbox} setStageCompleted={setStageCompleted} email={email} setEmail={setEmail} />}
                                 {
                                     stage < 3 && (
                                         <>
