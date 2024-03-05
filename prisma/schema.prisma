@@ -41,10 +41,10 @@ model Service {
 }
 
 model Deployment {
-  id              String   @id
-  createdAt       DateTime @default(now()) @db.Timestamp(6)
+  id              String    @id
+  createdAt       DateTime  @default(now()) @db.Timestamp(6)
   // status: 'deployed' | 'booting' | 'booted' | 'validating' | 'complete'
-  status          String?  @db.VarChar(255)
+  status          String?   @db.VarChar(255)
   awsInstanceId   String
   url             String?
   publicDns       String?
@@ -54,8 +54,9 @@ model Deployment {
   userFriendlyUrl String?
   email           String?
   deploymentKey   Json?
-  Vendor          Vendor   @relation(fields: [vendorId], references: [id])
-  Service         Service  @relation(fields: [serviceId], references: [id])
+  Vendor          Vendor    @relation(fields: [vendorId], references: [id])
+  Service         Service   @relation(fields: [serviceId], references: [id])
+  Command         Command[]
 }
 
 model EnvironmentVariable {
@@ -65,4 +66,19 @@ model EnvironmentVariable {
   createdAt DateTime @default(now()) @db.Timestamp(6)
   serviceId String?
   Service   Service? @relation(fields: [serviceId], references: [id])
+}
+
+// Commands that are issued to the agent on the server to make changes to the deployment of a service
+model Command {
+  id           String     @id
+  createdAt    DateTime   @default(now()) @db.Timestamp(6)
+  completedAt  DateTime?  @db.Timestamp(6)
+  // UPGRADE, ROLLBACK, DEPLOY, DESTROY, RESTART, STOP, START, etc.
+  type         String     @db.VarChar(255)
+  data         Json?
+  // NOT_ACKNOWLEGED,  IN_PROGRESS, COMPLETED, FAILED
+  status       String     @db.VarChar(255)
+  triggeredBy  String?    @db.VarChar(255)
+  deployment   Deployment @relation(fields: [deploymentId], references: [id])
+  deploymentId String
 }
