@@ -36,6 +36,7 @@ import posthog from "posthog-js";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Service } from "@prisma/client";
 import { Label } from "@/components/ui/label";
+import { JsonObject } from "@prisma/client/runtime/library";
 
 export type ServiceEnvironmentVariables = {
     [serviceName: string]: {
@@ -132,10 +133,21 @@ const StageZeroCard = ({ setStageCompleted }: { setStageCompleted: (value: boole
                     </h2>
                     {/* TODO these requirements should change based on your cloud provider */}
                     <div>
-                        <div className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
-                            <h3 className="text-slate-900 text-base font-semibold">EC2 t2.medium</h3>
-                            <p className="text-slate-500 text-sm font-normal">This deployment is configured to utilise 2 vCPU, 4 GiB of memory and 1x8 GiB of storage.</p>
-                        </div>
+                        {vendor.Service.map((service) => {
+                            const instanceSettings = (service.instanceSettings as JsonObject) || {};
+                            return (
+                                <div key={service.id} className="flex flex-col gap-2 border border-slate-300 p-3 rounded-md border-solid cursor-pointer hover:shadow">
+                                    <h3 className="text-slate-900 text-base font-semibold">{service.title} Instance Settings</h3>
+                                    <p className="text-slate-500 text-sm font-normal">
+                                        Instance type: {instanceSettings.instanceType as string || 't2.medium'}
+                                        <br />
+                                        Operating system: {instanceSettings.operatingSystem as string || 'ami-0440d3b780d96b29d'}
+                                        <br />
+                                        Storage: 1x{instanceSettings.storage as string || '8'} GiB
+                                    </p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
             </CardContent>
