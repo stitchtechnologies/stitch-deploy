@@ -76,7 +76,7 @@ model Command {
   // UPGRADE, ROLLBACK, DEPLOY, DESTROY, RESTART, STOP, START, etc.
   type         String     @db.VarChar(255)
   data         Json?
-  // NOT_ACKNOWLEDGED, ACKNOWLEGED, IN_PROGRESS, COMPLETED, FAILED
+  // NOT_ACKNOWLEDGED, ACKNOWLEDGED, IN_PROGRESS, COMPLETED, FAILED
   status       String     @db.VarChar(255)
   triggeredBy  String?    @db.VarChar(255)
   deployment   Deployment @relation(fields: [deploymentId], references: [id])
