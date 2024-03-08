@@ -41,23 +41,26 @@ model Service {
 }
 
 model Deployment {
-  id              String    @id
-  createdAt       DateTime  @default(now()) @db.Timestamp(6)
+  id                         String    @id
+  createdAt                  DateTime  @default(now()) @db.Timestamp(6)
   // status: 'deployed' | 'booting' | 'booted' | 'validating' | 'complete'
-  status          String?   @db.VarChar(255)
-  info            Json?
-  awsInstanceId   String
-  url             String?
-  publicDns       String?
-  vendorId        String
-  serviceId       String
-  validationUrl   String?
-  userFriendlyUrl String?
-  email           String?
-  deploymentKey   Json?
-  Vendor          Vendor    @relation(fields: [vendorId], references: [id])
-  Service         Service   @relation(fields: [serviceId], references: [id])
-  Command         Command[]
+  status                     String?   @db.VarChar(255)
+  info                       Json?
+  awsInstanceId              String
+  url                        String?
+  publicDns                  String?
+  vendorId                   String
+  serviceId                  String
+  validationUrl              String?
+  userFriendlyUrl            String?
+  email                      String?
+  deploymentKey              Json?
+  // We only care about the DAY and TIME, not the exact year/date.
+  maintenanceWindowStartTime DateTime?
+  maintenanceWindowEndTime   DateTime?
+  Vendor                     Vendor    @relation(fields: [vendorId], references: [id])
+  Service                    Service   @relation(fields: [serviceId], references: [id])
+  Command                    Command[]
 }
 
 model EnvironmentVariable {

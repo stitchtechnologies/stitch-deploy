@@ -23,7 +23,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils";
+import { capitalizeFirstLetter, cn, convertToTimeObjects } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import VendorEnvironmentVariablesForm from "@/components/onboarding/vendor-environment-variables";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -324,12 +324,46 @@ const StageOneCard = ({
     )
 }
 
-const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted, email, setEmail }: { acceptedCheckbox: boolean, setAcceptedCheckbox: (value: boolean) => void, setStageCompleted: (value: boolean) => void, email: string, setEmail: (value: string) => void }) => {
+const StageTwoCard = ({
+    acceptedCheckbox,
+    setAcceptedCheckbox,
+    setStageCompleted,
+    email,
+    setEmail,
+    maintenanceWindow,
+    setMaintenanceWindow,
+    enableMaintenanceWindow,
+    setEnableMaintenanceWindow }:
+    {
+        acceptedCheckbox: boolean,
+        setAcceptedCheckbox: (value: boolean) => void,
+        setStageCompleted: (value: boolean) => void,
+        email: string,
+        setEmail: (value: string) => void,
+        maintenanceWindow: any,
+        setMaintenanceWindow: Dispatch<SetStateAction<{
+            startDay: string;
+            startTime: string;
+            endDay: string;
+            endTime: string;
+        }>>,
+        enableMaintenanceWindow: boolean,
+        setEnableMaintenanceWindow: (value: boolean) => void
+    }
+) => {
     const { vendor } = useContext(VendorContext);
 
     useEffect(() => {
+        if (enableMaintenanceWindow) {
+            const { start, end } = convertToTimeObjects(maintenanceWindow)!
+            if (start >= end) {
+                setStageCompleted(false)
+                window.alert("Start time must be before the end time for the maintenance window. Please correct this and try again.")
+                return
+            }
+        }
         setStageCompleted(acceptedCheckbox)
-    }, [acceptedCheckbox, setStageCompleted])
+    }, [acceptedCheckbox, enableMaintenanceWindow, maintenanceWindow, maintenanceWindow.startDay, maintenanceWindow.startTime, maintenanceWindow.endDay, maintenanceWindow.endTime, setStageCompleted])
 
     return (
         <>
@@ -354,8 +388,90 @@ const StageTwoCard = ({ acceptedCheckbox, setAcceptedCheckbox, setStageCompleted
                         <span>Email<span className="text-slate-400 italic">- optional</span></span>
                         <InformationToolTip content={<>
                             <p>Once your deployment is completed, a email notifying you will be sent to this email.</p>
-                        </>} /></Label>
+                        </>} />
+                    </Label>
                     <Input type="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <hr className="my-6 mx-6 h-[1px] bg-[#E2E8F0] border-0" />
+                {/* optional maintenance window */}
+                <div className="px-6 flex flex-col gap-4">
+                    {/* checkbox for adding a maintenance window */}
+                    <div className="flex items-center space-x-2">
+                        <Checkbox id="maintenance" checked={enableMaintenanceWindow} onCheckedChange={(check) => setEnableMaintenanceWindow(check.valueOf() as boolean)} />
+                        <Label htmlFor="maintenance" className="flex gap-2 items-center">
+                            Add a maintenance window<span className="text-slate-400 italic">- optional</span>
+                            <InformationToolTip content={<>
+                                <p>This maintenance window will be used to apply commands and changes to your services. This can be used to schedule updates and changes to your services. During this time your services may be unavailable for a short period of time.</p>
+                            </>} />
+                        </Label>
+                    </div>
+                    {/* maintenance window form to set a start and end day/time */}
+                    {enableMaintenanceWindow && <>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex gap-4">
+                                <Select value={maintenanceWindow.startDay} onValueChange={(value) => setMaintenanceWindow(prev => ({ ...prev, startDay: value }))}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Start day" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="monday">Monday</SelectItem>
+                                        <SelectItem value="tuesday">Tuesday</SelectItem>
+                                        <SelectItem value="wednesday">Wednesday</SelectItem>
+                                        <SelectItem value="thursday">Thursday</SelectItem>
+                                        <SelectItem value="friday">Friday</SelectItem>
+                                        <SelectItem value="saturday">Saturday</SelectItem>
+                                        <SelectItem value="sunday">Sunday</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <Select value={maintenanceWindow.startTime} onValueChange={(value) => setMaintenanceWindow(prev => ({ ...prev, startTime: value }))}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Start time" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="9:00 AM">9:00 AM</SelectItem>
+                                        <SelectItem value="12:00 PM">12:00 PM</SelectItem>
+                                        <SelectItem value="3:00 PM">3:00 PM</SelectItem>
+                                        <SelectItem value="6:00 PM">6:00 PM</SelectItem>
+                                        <SelectItem value="9:00 PM">9:00 PM</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="text-center text-slate-400 text-xs">
+                                to
+                            </div>
+                            <div className="flex gap-4">
+                                <Select value={maintenanceWindow.endDay} onValueChange={(value) => setMaintenanceWindow(prev => ({ ...prev, endDay: value }))}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="End day" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="monday">Monday</SelectItem>
+                                        <SelectItem value="tuesday">Tuesday</SelectItem>
+                                        <SelectItem value="wednesday">Wednesday</SelectItem>
+                                        <SelectItem value="thursday">Thursday</SelectItem>
+                                        <SelectItem value="friday">Friday</SelectItem>
+                                        <SelectItem value="saturday">Saturday</SelectItem>
+                                        <SelectItem value="sunday">Sunday</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <Select value={maintenanceWindow.endTime} onValueChange={(value) => setMaintenanceWindow(prev => ({ ...prev, endTime: value }))}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="End time" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="9:00 AM">9:00 AM</SelectItem>
+                                        <SelectItem value="12:00 PM">12:00 PM</SelectItem>
+                                        <SelectItem value="3:00 PM">3:00 PM</SelectItem>
+                                        <SelectItem value="6:00 PM">6:00 PM</SelectItem>
+                                        <SelectItem value="9:00 PM">9:00 PM</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <div className="text-sm font-medium">
+                            Maintenance window is set to <span className="font-semibold">{capitalizeFirstLetter(maintenanceWindow.startDay)} {maintenanceWindow.startTime} - {capitalizeFirstLetter(maintenanceWindow.endDay)} {maintenanceWindow.endTime}</span>
+                        </div>
+                    </>}
                 </div>
             </CardContent>
         </>
@@ -389,6 +505,14 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
     const [service, setService] = useState<Service>();
 
     const [email, setEmail] = useState("");
+
+    const [enableMaintenanceWindow, setEnableMaintenanceWindow] = useState(false)
+    const [maintenanceWindow, setMaintenanceWindow] = useState({
+        startDay: "monday",
+        startTime: "9:00 AM",
+        endDay: "monday",
+        endTime: "6:00 PM"
+    })
 
     const { vendor } = vendorContext;
 
@@ -460,6 +584,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                 accountNumber,
                 awsRegion,
                 email,
+                maintenanceWindow: enableMaintenanceWindow ? convertToTimeObjects(maintenanceWindow) : null,
             }),
         })
             .then((res) => res.json())
@@ -507,7 +632,15 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                                     service={service!}
                                 />
                                 }
-                                {stage === 2 && <StageTwoCard acceptedCheckbox={acceptedCheckbox} setAcceptedCheckbox={setAcceptedCheckbox} setStageCompleted={setStageCompleted} email={email} setEmail={setEmail} />}
+                                {stage === 2 && <StageTwoCard acceptedCheckbox={acceptedCheckbox}
+                                    setAcceptedCheckbox={setAcceptedCheckbox}
+                                    setStageCompleted={setStageCompleted}
+                                    email={email}
+                                    setEmail={setEmail}
+                                    maintenanceWindow={maintenanceWindow}
+                                    setMaintenanceWindow={setMaintenanceWindow}
+                                    enableMaintenanceWindow={enableMaintenanceWindow}
+                                    setEnableMaintenanceWindow={setEnableMaintenanceWindow} />}
                                 {
                                     stage < 3 && (
                                         <>
@@ -533,7 +666,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                                                 }
                                                 {
                                                     stage === 2 && (
-                                                        <Button className="w-full" disabled={!acceptedCheckbox || deploying} onClick={handleSubmit}>{deploying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Deploying services</> : "Deploy services"}</Button>
+                                                        <Button className="w-full" disabled={!stageCompleted || deploying} onClick={handleSubmit}>{deploying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Deploying services</> : "Deploy services"}</Button>
                                                     )
                                                 }
                                             </CardFooter>
