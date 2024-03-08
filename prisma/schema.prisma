@@ -45,6 +45,7 @@ model Deployment {
   createdAt       DateTime  @default(now()) @db.Timestamp(6)
   // status: 'deployed' | 'booting' | 'booted' | 'validating' | 'complete'
   status          String?   @db.VarChar(255)
+  info            Json?
   awsInstanceId   String
   url             String?
   publicDns       String?
