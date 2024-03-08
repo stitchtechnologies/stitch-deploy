@@ -55,7 +55,6 @@ model Deployment {
   userFriendlyUrl            String?
   email                      String?
   deploymentKey              Json?
-  // We only care about the DAY and TIME, not the exact year/date.
   maintenanceWindowStartDay  String?
   maintenanceWindowStartTime String?
   maintenanceWindowEndDay    String?
@@ -76,15 +75,16 @@ model EnvironmentVariable {
 
 // Commands that are issued to the agent on the server to make changes to the deployment of a service
 model Command {
-  id           String     @id
-  createdAt    DateTime   @default(now()) @db.Timestamp(6)
-  completedAt  DateTime?  @db.Timestamp(6)
+  id                        String     @id
+  createdAt                 DateTime   @default(now()) @db.Timestamp(6)
+  completedAt               DateTime?  @db.Timestamp(6)
   // UPGRADE, ROLLBACK, DEPLOY, DESTROY, RESTART, STOP, START, etc.
-  type         String     @db.VarChar(255)
-  data         Json?
+  type                      String     @db.VarChar(255)
+  data                      Json?
   // NOT_ACKNOWLEDGED, ACKNOWLEDGED, IN_PROGRESS, COMPLETED, FAILED
-  status       String     @db.VarChar(255)
-  triggeredBy  String?    @db.VarChar(255)
-  deployment   Deployment @relation(fields: [deploymentId], references: [id])
-  deploymentId String
+  status                    String     @db.VarChar(255)
+  triggeredBy               String?    @db.VarChar(255)
+  overrideMaintenanceWindow Boolean?   @default(false)
+  deployment                Deployment @relation(fields: [deploymentId], references: [id])
+  deploymentId              String
 }

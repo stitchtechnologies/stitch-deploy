@@ -18,15 +18,22 @@ export function isStartDateBeforeEndDate(startDate: { day: string, time: string 
   if (startDay < endDay) {
     return true
   } else if (startDay === endDay) {
+    // handle AM and PM in the time
     const startHour = parseInt(startDate.time.split(':')[0])
+    const startMinute = parseInt(startDate.time.split(':')[1].split(' ')[0])
+    const startPeriod = startDate.time.split(' ')[1]
     const endHour = parseInt(endDate.time.split(':')[0])
-    if (startHour < endHour) {
+    const endMinute = parseInt(endDate.time.split(':')[1].split(' ')[0])
+    const endPeriod = endDate.time.split(' ')[1]
+    if (startPeriod === 'AM' && endPeriod === 'PM') {
       return true
-    } else if (startHour === endHour) {
-      const startMinute = parseInt(startDate.time.split(':')[1].split(' ')[0])
-      const endMinute = parseInt(endDate.time.split(':')[1].split(' ')[0])
-      if (startMinute < endMinute) {
+    } else if (startPeriod === endPeriod) {
+      if (startHour < endHour) {
         return true
+      } else if (startHour === endHour) {
+        if (startMinute < endMinute) {
+          return true
+        }
       }
     }
   }
