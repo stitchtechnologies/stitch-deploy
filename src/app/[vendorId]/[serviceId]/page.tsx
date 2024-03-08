@@ -23,7 +23,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { capitalizeFirstLetter, cn, convertToTimeObjects } from "@/lib/utils";
+import { capitalizeFirstLetter, cn, isStartDateBeforeEndDate } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import VendorEnvironmentVariablesForm from "@/components/onboarding/vendor-environment-variables";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -355,8 +355,14 @@ const StageTwoCard = ({
 
     useEffect(() => {
         if (enableMaintenanceWindow) {
-            const { start, end } = convertToTimeObjects(maintenanceWindow)!
-            if (start >= end) {
+            const isValidMaintenanceWindow = isStartDateBeforeEndDate({
+                day: maintenanceWindow.startDay,
+                time: maintenanceWindow.startTime
+            }, {
+                day: maintenanceWindow.endDay,
+                time: maintenanceWindow.endTime
+            })
+            if (!isValidMaintenanceWindow) {
                 setStageCompleted(false)
                 window.alert("Start time must be before the end time for the maintenance window. Please correct this and try again.")
                 return
@@ -584,7 +590,7 @@ export default function VendorServiceOnboarding({ params }: { params: { vendorId
                 accountNumber,
                 awsRegion,
                 email,
-                maintenanceWindow: enableMaintenanceWindow ? convertToTimeObjects(maintenanceWindow) : null,
+                maintenanceWindow: enableMaintenanceWindow ? maintenanceWindow : null,
             }),
         })
             .then((res) => res.json())
